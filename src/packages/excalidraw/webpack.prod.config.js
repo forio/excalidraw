@@ -18,7 +18,7 @@ module.exports = {
     filename: "[name].js",
     chunkFilename: "excalidraw-assets/[name]-[contenthash].js",
     assetModuleFilename: "excalidraw-assets/[name][ext]",
-    publicPath: "",
+    publicPath: "assets/",
   },
   resolve: {
     extensions: [".js", ".ts", ".tsx", ".css", ".scss"],

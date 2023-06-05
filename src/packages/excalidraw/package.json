@@ -79,6 +79,7 @@
     "pack": "yarn build:umd && yarn pack",
     "start": "webpack serve --config webpack.dev-server.config.js",
     "install:deps": "yarn install --frozen-lockfile && yarn --cwd ../../../",
-    "build:example": "EXAMPLE=true webpack --config webpack.dev-server.config.js && yarn gen:types"
+    "build:example": "EXAMPLE=true webpack --config webpack.dev-server.config.js && yarn gen:types",
+    "dev": "rm -rf dist && cross-env NODE_ENV=development webpack --config webpack.dev.config.js --watch"
   }
 }
