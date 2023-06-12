@@ -52,6 +52,10 @@ export const ContextMenu = React.memo(
       return acc;
     }, []);
 
+    if (filteredItems[filteredItems.length - 1] === CONTEXT_MENU_SEPARATOR) {
+      filteredItems.pop();
+    }
+
     return (
       <Popover
         onCloseRequest={() => setAppState({ contextMenu: null })}

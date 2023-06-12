@@ -6236,6 +6236,7 @@ class App extends React.Component<AppProps, AppState> {
         showHyperlinkPopup: false,
       },
       () => {
+        if (type === "canvas") return;
         this.setState({
           contextMenu: { top, left, items: this.getContextMenuItems(type) },
         });
@@ -6353,7 +6354,7 @@ class App extends React.Component<AppProps, AppState> {
   ): ContextMenuItems => {
     const options: ContextMenuItems = [];
 
-    options.push(actionCopyAsPng, actionCopyAsSvg);
+    // options.push(actionCopyAsPng, actionCopyAsSvg);
 
     // canvas contextMenu
     // -------------------------------------------------------------------------
@@ -6402,8 +6403,8 @@ class App extends React.Component<AppProps, AppState> {
       CONTEXT_MENU_SEPARATOR,
       ...options,
       CONTEXT_MENU_SEPARATOR,
-      actionCopyStyles,
-      actionPasteStyles,
+      //   actionCopyStyles,
+      //   actionPasteStyles,
       CONTEXT_MENU_SEPARATOR,
       actionGroup,
       actionUnbindText,
@@ -6411,7 +6412,7 @@ class App extends React.Component<AppProps, AppState> {
       actionWrapTextInContainer,
       actionUngroup,
       CONTEXT_MENU_SEPARATOR,
-      actionAddToLibrary,
+      //   actionAddToLibrary,
       CONTEXT_MENU_SEPARATOR,
       actionSendBackward,
       actionBringForward,
@@ -6422,11 +6423,11 @@ class App extends React.Component<AppProps, AppState> {
       actionFlipVertical,
       CONTEXT_MENU_SEPARATOR,
       actionToggleLinearEditor,
-      actionLink,
-      actionDuplicateSelection,
-      actionToggleElementLock,
-      CONTEXT_MENU_SEPARATOR,
-      actionDeleteSelected,
+      //   actionLink,
+      //   actionDuplicateSelection,
+      //   actionToggleElementLock,
+      //   CONTEXT_MENU_SEPARATOR,
+      //   actionDeleteSelected,
     ];
   };
 

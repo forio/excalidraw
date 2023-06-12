@@ -196,11 +196,11 @@ export const SelectedShapeActions = ({
         <fieldset>
           <legend>{t("labels.actions")}</legend>
           <div className="buttonList">
-            {!device.isMobile && renderAction("duplicateSelection")}
-            {!device.isMobile && renderAction("deleteSelectedElements")}
+            {/* {!device.isMobile && renderAction("duplicateSelection")} */}
+            {/* {!device.isMobile && renderAction("deleteSelectedElements")} */}
             {renderAction("group")}
             {renderAction("ungroup")}
-            {showLinkIcon && renderAction("hyperlink")}
+            {/* {showLinkIcon && renderAction("hyperlink")} */}
           </div>
         </fieldset>
       )}
