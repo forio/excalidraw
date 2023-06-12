@@ -166,13 +166,13 @@ const renderSingleLinearPoint = (
   isSelected: boolean,
   isPhantomPoint = false,
 ) => {
-  context.strokeStyle = "#5e5ad8";
+  context.strokeStyle = "#475569";
   context.setLineDash([]);
   context.fillStyle = "rgba(255, 255, 255, 0.9)";
   if (isSelected) {
-    context.fillStyle = "rgba(134, 131, 226, 0.9)";
+    context.fillStyle = "rgba(51, 65, 85, 0.4)";
   } else if (isPhantomPoint) {
-    context.fillStyle = "rgba(177, 151, 252, 0.7)";
+    context.fillStyle = "rgba(51, 65, 85, 0.2)";
   }
 
   fillCircle(
@@ -276,7 +276,7 @@ const highlightPoint = (
   context: CanvasRenderingContext2D,
   renderConfig: RenderConfig,
 ) => {
-  context.fillStyle = "rgba(105, 101, 219, 0.4)";
+  context.fillStyle = "rgba(51, 65, 85, 0.2)";
 
   fillCircle(
     context,
