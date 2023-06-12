@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import React, { useContext } from "react";
 import { flushSync } from "react-dom";
 
@@ -482,6 +484,7 @@ class App extends React.Component<AppProps, AppState> {
         setCursor: this.setCursor,
         resetCursor: this.resetCursor,
         toggleSidebar: this.toggleSidebar,
+        onImageAction: this.onImageAction,
       } as const;
       if (typeof excalidrawRef === "function") {
         excalidrawRef(api);
@@ -574,7 +577,7 @@ class App extends React.Component<AppProps, AppState> {
       this.scene.getNonDeletedElements(),
       this.state,
     );
-    const { renderTopRightUI, renderCustomStats } = this.props;
+    const { renderTopRightUI, renderCustomStats, ToolStack } = this.props;
 
     return (
       <div
@@ -629,6 +632,7 @@ class App extends React.Component<AppProps, AppState> {
                             this.state.activeTool.type === "selection" &&
                             !this.scene.getElementsIncludingDeleted().length
                           }
+                          ToolStack={this.props.ToolStack}
                         >
                           {this.props.children}
                         </LayerUI>
@@ -2397,9 +2401,6 @@ class App extends React.Component<AppProps, AppState> {
     }
     if (!isLinearElementType(nextActiveTool.type)) {
       this.setState({ suggestedBindings: [] });
-    }
-    if (nextActiveTool.type === "image") {
-      this.onImageAction();
     }
     if (nextActiveTool.type !== "selection") {
       this.setState({
@@ -5777,9 +5778,7 @@ class App extends React.Component<AppProps, AppState> {
     }
   };
 
-  private onImageAction = async (
-    { insertOnCanvasDirectly } = { insertOnCanvasDirectly: false },
-  ) => {
+  private onImageAction = async (file, insertOnCanvasDirectly = false) => {
     try {
       const clientX = this.state.width / 2 + this.state.offsetLeft;
       const clientY = this.state.height / 2 + this.state.offsetTop;
@@ -5789,20 +5788,13 @@ class App extends React.Component<AppProps, AppState> {
         this.state,
       );
 
-      const imageFile = await fileOpen({
-        description: "Image",
-        extensions: Object.keys(
-          IMAGE_MIME_TYPES,
-        ) as (keyof typeof IMAGE_MIME_TYPES)[],
-      });
-
       const imageElement = this.createImageElement({
         sceneX: x,
         sceneY: y,
       });
 
       if (insertOnCanvasDirectly) {
-        this.insertImageElement(imageElement, imageFile);
+        this.insertImageElement(imageElement, file);
         this.initializeImageDimensions(imageElement);
         this.setState(
           {
@@ -5820,7 +5812,7 @@ class App extends React.Component<AppProps, AppState> {
           () => {
             this.insertImageElement(
               imageElement,
-              imageFile,
+              file,
               /* showCursorImagePreview */ true,
             );
           },

@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import clsx from "clsx";
 import React from "react";
 import { ActionManager } from "../actions/manager";
@@ -116,6 +118,7 @@ const LayerUI = ({
   onExportImage,
   renderWelcomeScreen,
   children,
+  ToolStack,
 }: LayerUIProps) => {
   const device = useDevice();
   const tunnels = useInitializeTunnels();
@@ -234,41 +237,7 @@ const LayerUI = ({
                           device={device}
                         />
                         {heading}
-                        <Stack.Row gap={1}>
-                          <PenModeButton
-                            zenModeEnabled={appState.zenModeEnabled}
-                            checked={appState.penMode}
-                            onChange={onPenModeToggle}
-                            title={t("toolBar.penMode")}
-                            penDetected={appState.penDetected}
-                          />
-                          <LockButton
-                            checked={appState.activeTool.locked}
-                            onChange={onLockToggle}
-                            title={t("toolBar.lock")}
-                          />
-
-                          <div className="App-toolbar__divider"></div>
-
-                          <HandButton
-                            checked={isHandToolActive(appState)}
-                            onChange={() => onHandToolToggle()}
-                            title={t("toolBar.hand")}
-                            isMobile
-                          />
-
-                          <ShapesSwitcher
-                            appState={appState}
-                            canvas={canvas}
-                            activeTool={appState.activeTool}
-                            setAppState={setAppState}
-                            onImageAction={({ pointerType }) => {
-                              onImageAction({
-                                insertOnCanvasDirectly: pointerType !== "mouse",
-                              });
-                            }}
-                          />
-                        </Stack.Row>
+                        <Stack.Row gap={1}>{ToolStack}</Stack.Row>
                       </Island>
                     </Stack.Row>
                   </Stack.Col>

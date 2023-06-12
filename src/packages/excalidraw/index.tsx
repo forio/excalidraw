@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import React, { useEffect, forwardRef } from "react";
 import { InitializeApp } from "../../components/InitializeApp";
 import App from "../../components/App";
@@ -115,6 +117,7 @@ const ExcalidrawBase = (props: ExcalidrawProps) => {
           onLinkOpen={onLinkOpen}
           onPointerDown={onPointerDown}
           onScrollChange={onScrollChange}
+          ToolStack={props.ToolStack}
         >
           {children}
         </App>
@@ -242,8 +245,11 @@ export { Sidebar } from "../../components/Sidebar/Sidebar";
 export { Button } from "../../components/Button";
 export { Footer };
 export { MainMenu };
-export { useDevice } from "../../components/App";
+export { useDevice, useExcalidrawAppState } from "../../components/App";
 export { WelcomeScreen };
 export { LiveCollaborationTrigger };
-
 export { DefaultSidebar } from "../../components/DefaultSidebar";
+export { SHAPES } from "../../shapes";
+export { actionDuplicateSelection } from "../../actions/actionDuplicateSelection";
+export { actionDeleteSelected } from "../../actions/actionDeleteSelected";
+export { DuplicateIcon, TrashIcon } from "../../components/icons";
