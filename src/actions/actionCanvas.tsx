@@ -337,7 +337,8 @@ export const actionToggleEraserTool = register({
       commitToHistory: true,
     };
   },
-  keyTest: (event) => event.key === KEYS.E,
+  // keyTest: (event) => event.key === KEYS.E,
+  keyTest: (event) => false,
 });
 
 export const actionToggleHandTool = register({

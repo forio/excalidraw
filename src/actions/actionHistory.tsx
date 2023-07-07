@@ -66,10 +66,11 @@ export const createUndoAction: ActionCreator = (history) => ({
   trackEvent: { category: "history" },
   perform: (elements, appState) =>
     writeData(elements, appState, () => history.undoOnce()),
-  keyTest: (event) =>
-    event[KEYS.CTRL_OR_CMD] &&
-    event.key.toLowerCase() === KEYS.Z &&
-    !event.shiftKey,
+  //   keyTest: (event) =>
+  //     event[KEYS.CTRL_OR_CMD] &&
+  //     event.key.toLowerCase() === KEYS.Z &&
+  //     !event.shiftKey,
+  keyTest: () => false,
   PanelComponent: ({ updateData, data }) => (
     <ToolButton
       type="button"
@@ -87,11 +88,12 @@ export const createRedoAction: ActionCreator = (history) => ({
   trackEvent: { category: "history" },
   perform: (elements, appState) =>
     writeData(elements, appState, () => history.redoOnce()),
-  keyTest: (event) =>
-    (event[KEYS.CTRL_OR_CMD] &&
-      event.shiftKey &&
-      event.key.toLowerCase() === KEYS.Z) ||
-    (isWindows && event.ctrlKey && !event.shiftKey && event.key === KEYS.Y),
+  // keyTest: (event) =>
+  //   (event[KEYS.CTRL_OR_CMD] &&
+  //     event.shiftKey &&
+  //     event.key.toLowerCase() === KEYS.Z) ||
+  //   (isWindows && event.ctrlKey && !event.shiftKey && event.key === KEYS.Y),
+  keyTest: () => false,
   PanelComponent: ({ updateData, data }) => (
     <ToolButton
       type="button"

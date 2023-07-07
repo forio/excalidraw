@@ -1089,9 +1089,9 @@ class App extends React.Component<AppProps, AppState> {
 
   private removeEventListeners() {
     document.removeEventListener(EVENT.POINTER_UP, this.removePointer);
-    document.removeEventListener(EVENT.COPY, this.onCopy);
-    document.removeEventListener(EVENT.PASTE, this.pasteFromClipboard);
-    document.removeEventListener(EVENT.CUT, this.onCut);
+    // document.removeEventListener(EVENT.COPY, this.onCopy);
+    // document.removeEventListener(EVENT.PASTE, this.pasteFromClipboard);
+    // document.removeEventListener(EVENT.CUT, this.onCut);
     this.excalidrawContainerRef.current?.removeEventListener(
       EVENT.WHEEL,
       this.onWheel,
@@ -1143,7 +1143,7 @@ class App extends React.Component<AppProps, AppState> {
   private addEventListeners() {
     this.removeEventListeners();
     document.addEventListener(EVENT.POINTER_UP, this.removePointer); // #3553
-    document.addEventListener(EVENT.COPY, this.onCopy);
+    // document.addEventListener(EVENT.COPY, this.onCopy);
     this.excalidrawContainerRef.current?.addEventListener(
       EVENT.WHEEL,
       this.onWheel,
@@ -1184,17 +1184,17 @@ class App extends React.Component<AppProps, AppState> {
       return;
     }
 
-    document.addEventListener(EVENT.PASTE, this.pasteFromClipboard);
-    document.addEventListener(EVENT.CUT, this.onCut);
-    if (this.props.detectScroll) {
-      this.nearestScrollableContainer = getNearestScrollableContainer(
-        this.excalidrawContainerRef.current!,
-      );
-      this.nearestScrollableContainer.addEventListener(
-        EVENT.SCROLL,
-        this.onScroll,
-      );
-    }
+    // document.addEventListener(EVENT.PASTE, this.pasteFromClipboard);
+    // document.addEventListener(EVENT.CUT, this.onCut);
+    // if (this.props.detectScroll) {
+    //   this.nearestScrollableContainer = getNearestScrollableContainer(
+    //     this.excalidrawContainerRef.current!,
+    //   );
+    //   this.nearestScrollableContainer.addEventListener(
+    //     EVENT.SCROLL,
+    //     this.onScroll,
+    //   );
+    // }
     window.addEventListener(EVENT.RESIZE, this.onResize, false);
     window.addEventListener(EVENT.UNLOAD, this.onUnload, false);
     window.addEventListener(EVENT.BLUR, this.onBlur, false);
@@ -2295,7 +2295,7 @@ class App extends React.Component<AppProps, AppState> {
               `keyboard (${this.device.isMobile ? "mobile" : "desktop"})`,
             );
           }
-          this.setActiveTool({ type: shape });
+          // this.setActiveTool({ type: shape });
           event.stopPropagation();
         } else if (event.key === KEYS.Q) {
           this.toggleLock("keyboard");
@@ -2338,12 +2338,12 @@ class App extends React.Component<AppProps, AppState> {
         }
       }
 
-      if (
-        event[KEYS.CTRL_OR_CMD] &&
-        (event.key === KEYS.BACKSPACE || event.key === KEYS.DELETE)
-      ) {
-        jotaiStore.set(activeConfirmDialogAtom, "clearCanvas");
-      }
+      // if (
+      //   event[KEYS.CTRL_OR_CMD] &&
+      //   (event.key === KEYS.BACKSPACE || event.key === KEYS.DELETE)
+      // ) {
+      //   jotaiStore.set(activeConfirmDialogAtom, "clearCanvas");
+      // }
     },
   );
 
