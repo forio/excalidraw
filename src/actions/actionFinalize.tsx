@@ -162,9 +162,7 @@ export const actionFinalize = register({
         ...appState,
         cursorButton: "up",
         activeTool:
-          (appState.activeTool.locked ||
-            appState.activeTool.type === "freedraw") &&
-          multiPointElement
+          appState.activeTool.locked && multiPointElement
             ? appState.activeTool
             : activeTool,
         draggingElement: null,
