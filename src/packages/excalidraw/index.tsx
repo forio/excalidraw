@@ -252,7 +252,7 @@ export { DefaultSidebar } from "../../components/DefaultSidebar";
 export { SHAPES } from "../../shapes";
 export { actionDuplicateSelection } from "../../actions/actionDuplicateSelection";
 export { actionDeleteSelected } from "../../actions/actionDeleteSelected";
-export { DuplicateIcon, TrashIcon } from "../../components/icons";
+export { DuplicateIcon, TrashIcon, handIcon } from "../../components/icons";
 export { default as Collab } from "../../excalidraw-app/collab/Collab";
 export { useCallbackRefState } from "../../hooks/useCallbackRefState";
 export { getDataURL } from "../../data/blob";
