@@ -1,12 +1,7 @@
 import clsx from "clsx";
 import { actionShortcuts } from "../../actions";
 import { ActionManager } from "../../actions/manager";
-import {
-  ExitZenModeAction,
-  FinalizeAction,
-  UndoRedoActions,
-  ZoomActions,
-} from "../Actions";
+import { ExitZenModeAction, FinalizeAction, ZoomActions } from "../Actions";
 import { useDevice } from "../App";
 import { useTunnels } from "../../context/tunnels";
 import { HelpButton } from "../HelpButton";
@@ -48,16 +43,6 @@ const Footer = ({
               renderAction={actionManager.renderAction}
               zoom={appState.zoom}
             />
-
-            {!appState.viewModeEnabled && (
-              <UndoRedoActions
-                renderAction={actionManager.renderAction}
-                className={clsx("zen-mode-transition", {
-                  "layer-ui__wrapper__footer-left--transition-bottom":
-                    appState.zenModeEnabled,
-                })}
-              />
-            )}
             {showFinalize && (
               <FinalizeAction
                 renderAction={actionManager.renderAction}
@@ -71,18 +56,6 @@ const Footer = ({
         </Stack.Col>
       </div>
       <FooterCenterTunnel.Out />
-      <div
-        className={clsx("layer-ui__wrapper__footer-right zen-mode-transition", {
-          "transition-right disable-pointerEvents": appState.zenModeEnabled,
-        })}
-      >
-        <div style={{ position: "relative" }}>
-          {renderWelcomeScreen && <WelcomeScreenHelpHintTunnel.Out />}
-          <HelpButton
-            onClick={() => actionManager.executeAction(actionShortcuts)}
-          />
-        </div>
-      </div>
       <ExitZenModeAction
         actionManager={actionManager}
         showExitZenModeBtn={showExitZenModeBtn}
