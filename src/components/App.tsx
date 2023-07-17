@@ -2286,21 +2286,21 @@ class App extends React.Component<AppProps, AppState> {
         !event.metaKey &&
         this.state.draggingElement === null
       ) {
-        const shape = findShapeByKey(event.key);
-        if (shape) {
-          if (this.state.activeTool.type !== shape) {
-            trackEvent(
-              "toolbar",
-              shape,
-              `keyboard (${this.device.isMobile ? "mobile" : "desktop"})`,
-            );
-          }
-          // this.setActiveTool({ type: shape });
-          event.stopPropagation();
-        } else if (event.key === KEYS.Q) {
-          this.toggleLock("keyboard");
-          event.stopPropagation();
-        }
+        // const shape = findShapeByKey(event.key);
+        // if (shape) {
+        //   if (this.state.activeTool.type !== shape) {
+        //     trackEvent(
+        //       "toolbar",
+        //       shape,
+        //       `keyboard (${this.device.isMobile ? "mobile" : "desktop"})`,
+        //     );
+        //   }
+        // this.setActiveTool({ type: shape });
+        //   event.stopPropagation();
+        // } else if (event.key === KEYS.Q) {
+        //   this.toggleLock("keyboard");
+        // }
+        event.stopPropagation();
       }
       if (event.key === KEYS.SPACE && gesture.pointers.size === 0) {
         isHoldingSpace = true;
