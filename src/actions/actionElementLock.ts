@@ -49,14 +49,15 @@ export const actionToggleElementLock = register({
       ? "labels.elementLock.lockAll"
       : "labels.elementLock.unlockAll";
   },
-  keyTest: (event, appState, elements) => {
-    return (
-      event.key.toLocaleLowerCase() === KEYS.L &&
-      event[KEYS.CTRL_OR_CMD] &&
-      event.shiftKey &&
-      getSelectedElements(elements, appState, false).length > 0
-    );
-  },
+  keyTest: () => false,
+  // keyTest: (event, appState, elements) => {
+  //   return (
+  //     event.key.toLocaleLowerCase() === KEYS.L &&
+  //     event[KEYS.CTRL_OR_CMD] &&
+  //     event.shiftKey &&
+  //     getSelectedElements(elements, appState, false).length > 0
+  //   );
+  // },
 });
 
 export const actionUnlockAllElements = register({

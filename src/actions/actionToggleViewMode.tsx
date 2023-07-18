@@ -22,6 +22,6 @@ export const actionToggleViewMode = register({
     return typeof appProps.viewModeEnabled === "undefined";
   },
   contextItemLabel: "labels.viewMode",
-  keyTest: (event) =>
-    !event[KEYS.CTRL_OR_CMD] && event.altKey && event.code === CODES.R,
+  keyTest: () => false,
+  // !event[KEYS.CTRL_OR_CMD] && event.altKey && event.code === CODES.R,
 });

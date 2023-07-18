@@ -301,7 +301,8 @@ export const actionToggleTheme = register({
       commitToHistory: false,
     };
   },
-  keyTest: (event) => event.altKey && event.shiftKey && event.code === CODES.D,
+  keyTest: () => false,
+  // keyTest: (event) => event.altKey && event.shiftKey && event.code === CODES.D,
   predicate: (elements, appState, props, app) => {
     return !!app.props.UIOptions.canvasActions.toggleTheme;
   },

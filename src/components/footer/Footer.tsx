@@ -56,10 +56,6 @@ const Footer = ({
         </Stack.Col>
       </div>
       <FooterCenterTunnel.Out />
-      <ExitZenModeAction
-        actionManager={actionManager}
-        showExitZenModeBtn={showExitZenModeBtn}
-      />
     </footer>
   );
 };

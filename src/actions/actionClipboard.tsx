@@ -60,7 +60,8 @@ export const actionCut = register({
     return app.device.isMobile && !!navigator.clipboard;
   },
   contextItemLabel: "labels.cut",
-  keyTest: (event) => event[KEYS.CTRL_OR_CMD] && event.key === KEYS.X,
+  keyTest: () => false,
+  // keyTest: (event) => event[KEYS.CTRL_OR_CMD] && event.key === KEYS.X,
 });
 
 export const actionCopyAsSvg = register({
