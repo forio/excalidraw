@@ -105,9 +105,6 @@ const getHints = ({
       }
       return t("hints.lineEditor_info");
     }
-    if (isTextBindableContainer(selectedElements[0])) {
-      return t("hints.bindTextToElement");
-    }
   }
 
   return null;

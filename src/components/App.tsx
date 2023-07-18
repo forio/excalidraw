@@ -2892,34 +2892,34 @@ class App extends React.Component<AppProps, AppState> {
 
     resetCursor(this.canvas);
     if (!event[KEYS.CTRL_OR_CMD] && !this.state.viewModeEnabled) {
-      const container = getTextBindableContainerAtPosition(
-        this.scene.getNonDeletedElements(),
-        this.state,
-        sceneX,
-        sceneY,
-      );
-      if (container) {
-        if (
-          hasBoundTextElement(container) ||
-          !isTransparent(container.backgroundColor) ||
-          isHittingElementNotConsideringBoundingBox(container, this.state, [
-            sceneX,
-            sceneY,
-          ])
-        ) {
-          const midPoint = getContainerCenter(container, this.state);
+      // const container = getTextBindableContainerAtPosition(
+      //   this.scene.getNonDeletedElements(),
+      //   this.state,
+      //   sceneX,
+      //   sceneY,
+      // );
+      // if (container) {
+      //   if (
+      //     hasBoundTextElement(container) ||
+      //     !isTransparent(container.backgroundColor) ||
+      //     isHittingElementNotConsideringBoundingBox(container, this.state, [
+      //       sceneX,
+      //       sceneY,
+      //     ])
+      //   ) {
+      //     const midPoint = getContainerCenter(container, this.state);
 
-          sceneX = midPoint.x;
-          sceneY = midPoint.y;
-        }
-      }
+      //     sceneX = midPoint.x;
+      //     sceneY = midPoint.y;
+      //   }
+      // }
       const hitElement = this.getElementAtPosition(sceneX, sceneY);
       if (isTextElement(hitElement)) {
         this.startTextEditing({
           sceneX,
           sceneY,
           insertAtParentCenter: !event.altKey,
-          container,
+          container: null,
         });
       }
     }
@@ -4794,68 +4794,68 @@ class App extends React.Component<AppProps, AppState> {
           );
           this.maybeSuggestBindingForAll(selectedElements);
 
-          // We duplicate the selected element if alt is pressed on pointer move
-          if (event.altKey && !pointerDownState.hit.hasBeenDuplicated) {
-            // Move the currently selected elements to the top of the z index stack, and
-            // put the duplicates where the selected elements used to be.
-            // (the origin point where the dragging started)
+          // // We duplicate the selected element if alt is pressed on pointer move
+          // if (event.altKey && !pointerDownState.hit.hasBeenDuplicated) {
+          //   // Move the currently selected elements to the top of the z index stack, and
+          //   // put the duplicates where the selected elements used to be.
+          //   // (the origin point where the dragging started)
 
-            pointerDownState.hit.hasBeenDuplicated = true;
+          //   pointerDownState.hit.hasBeenDuplicated = true;
 
-            const nextElements = [];
-            const elementsToAppend = [];
-            const groupIdMap = new Map();
-            const oldIdToDuplicatedId = new Map();
-            const hitElement = pointerDownState.hit.element;
-            const elements = this.scene.getElementsIncludingDeleted();
-            const selectedElementIds: Array<ExcalidrawElement["id"]> =
-              getSelectedElements(elements, this.state, true).map(
-                (element) => element.id,
-              );
+          //   const nextElements = [];
+          //   const elementsToAppend = [];
+          //   const groupIdMap = new Map();
+          //   const oldIdToDuplicatedId = new Map();
+          //   const hitElement = pointerDownState.hit.element;
+          //   const elements = this.scene.getElementsIncludingDeleted();
+          //   const selectedElementIds: Array<ExcalidrawElement["id"]> =
+          //     getSelectedElements(elements, this.state, true).map(
+          //       (element) => element.id,
+          //     );
 
-            for (const element of elements) {
-              if (
-                selectedElementIds.includes(element.id) ||
-                // case: the state.selectedElementIds might not have been
-                // updated yet by the time this mousemove event is fired
-                (element.id === hitElement?.id &&
-                  pointerDownState.hit.wasAddedToSelection)
-              ) {
-                const duplicatedElement = duplicateElement(
-                  this.state.editingGroupId,
-                  groupIdMap,
-                  element,
-                );
-                const [originDragX, originDragY] = getGridPoint(
-                  pointerDownState.origin.x - pointerDownState.drag.offset.x,
-                  pointerDownState.origin.y - pointerDownState.drag.offset.y,
-                  this.state.gridSize,
-                );
-                mutateElement(duplicatedElement, {
-                  x: duplicatedElement.x + (originDragX - dragX),
-                  y: duplicatedElement.y + (originDragY - dragY),
-                });
-                nextElements.push(duplicatedElement);
-                elementsToAppend.push(element);
-                oldIdToDuplicatedId.set(element.id, duplicatedElement.id);
-              } else {
-                nextElements.push(element);
-              }
-            }
-            const nextSceneElements = [...nextElements, ...elementsToAppend];
-            bindTextToShapeAfterDuplication(
-              nextElements,
-              elementsToAppend,
-              oldIdToDuplicatedId,
-            );
-            fixBindingsAfterDuplication(
-              nextSceneElements,
-              elementsToAppend,
-              oldIdToDuplicatedId,
-              "duplicatesServeAsOld",
-            );
-            this.scene.replaceAllElements(nextSceneElements);
-          }
+          //   for (const element of elements) {
+          //     if (
+          //       selectedElementIds.includes(element.id) ||
+          //       // case: the state.selectedElementIds might not have been
+          //       // updated yet by the time this mousemove event is fired
+          //       (element.id === hitElement?.id &&
+          //         pointerDownState.hit.wasAddedToSelection)
+          //     ) {
+          //       const duplicatedElement = duplicateElement(
+          //         this.state.editingGroupId,
+          //         groupIdMap,
+          //         element,
+          //       );
+          //       const [originDragX, originDragY] = getGridPoint(
+          //         pointerDownState.origin.x - pointerDownState.drag.offset.x,
+          //         pointerDownState.origin.y - pointerDownState.drag.offset.y,
+          //         this.state.gridSize,
+          //       );
+          //       mutateElement(duplicatedElement, {
+          //         x: duplicatedElement.x + (originDragX - dragX),
+          //         y: duplicatedElement.y + (originDragY - dragY),
+          //       });
+          //       nextElements.push(duplicatedElement);
+          //       elementsToAppend.push(element);
+          //       oldIdToDuplicatedId.set(element.id, duplicatedElement.id);
+          //     } else {
+          //       nextElements.push(element);
+          //     }
+          //   }
+          //   const nextSceneElements = [...nextElements, ...elementsToAppend];
+          //   bindTextToShapeAfterDuplication(
+          //     nextElements,
+          //     elementsToAppend,
+          //     oldIdToDuplicatedId,
+          //   );
+          //   fixBindingsAfterDuplication(
+          //     nextSceneElements,
+          //     elementsToAppend,
+          //     oldIdToDuplicatedId,
+          //     "duplicatesServeAsOld",
+          //   );
+          //   this.scene.replaceAllElements(nextSceneElements);
+          // }
           return;
         }
       }
@@ -6330,7 +6330,6 @@ class App extends React.Component<AppProps, AppState> {
       actionGroup,
       actionUnbindText,
       actionBindText,
-      actionWrapTextInContainer,
       actionUngroup,
       CONTEXT_MENU_SEPARATOR,
       //   actionAddToLibrary,
