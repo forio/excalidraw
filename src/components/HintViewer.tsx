@@ -47,10 +47,6 @@ const getHints = ({
     return t("hints.freeDraw");
   }
 
-  if (activeTool.type === "text") {
-    return t("hints.text");
-  }
-
   if (appState.activeTool.type === "image" && appState.pendingImageElementId) {
     return t("hints.placeImage");
   }
@@ -104,9 +100,6 @@ const getHints = ({
           : t("hints.lineEditor_nothingSelected");
       }
       return t("hints.lineEditor_info");
-    }
-    if (isTextBindableContainer(selectedElements[0])) {
-      return t("hints.bindTextToElement");
     }
   }
 

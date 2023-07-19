@@ -86,5 +86,6 @@ export const actionShortcuts = register({
       commitToHistory: false,
     };
   },
-  keyTest: (event) => event.key === KEYS.QUESTION_MARK,
+  keyTest: () => false,
+  // keyTest: (event) => event.key === KEYS.QUESTION_MARK,
 });

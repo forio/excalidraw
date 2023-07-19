@@ -16,6 +16,7 @@ export const actionToggleStats = register({
   },
   checked: (appState) => appState.showStats,
   contextItemLabel: "stats.title",
-  keyTest: (event) =>
-    !event[KEYS.CTRL_OR_CMD] && event.altKey && event.code === CODES.SLASH,
+  keyTest: () => false,
+  // keyTest: (event) =>
+  //   !event[KEYS.CTRL_OR_CMD] && event.altKey && event.code === CODES.SLASH,
 });

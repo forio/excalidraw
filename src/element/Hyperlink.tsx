@@ -264,7 +264,8 @@ export const actionLink = register({
     };
   },
   trackEvent: { category: "hyperlink", action: "click" },
-  keyTest: (event) => event[KEYS.CTRL_OR_CMD] && event.key === KEYS.K,
+  keyTest: () => false,
+  // keyTest: (event) => event[KEYS.CTRL_OR_CMD] && event.key === KEYS.K,
   contextItemLabel: (elements, appState) =>
     getContextMenuLabel(elements, appState),
   predicate: (elements, appState) => {

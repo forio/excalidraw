@@ -586,7 +586,6 @@ class App extends React.Component<AppProps, AppState> {
           "excalidraw--mobile": this.device.isMobile,
         })}
         ref={this.excalidrawContainerRef}
-        onDrop={this.handleAppOnDrop}
         tabIndex={0}
         onKeyDown={
           this.props.handleKeyboardGlobally ? undefined : this.onKeyDown
@@ -2260,10 +2259,7 @@ class App extends React.Component<AppProps, AppState> {
                 });
               }
             }
-          } else if (
-            isTextElement(selectedElement) ||
-            isValidTextContainer(selectedElement)
-          ) {
+          } else if (isTextElement(selectedElement)) {
             let container;
             if (!isTextElement(selectedElement)) {
               container = selectedElement as ExcalidrawTextContainer;
@@ -2896,33 +2892,36 @@ class App extends React.Component<AppProps, AppState> {
 
     resetCursor(this.canvas);
     if (!event[KEYS.CTRL_OR_CMD] && !this.state.viewModeEnabled) {
-      const container = getTextBindableContainerAtPosition(
-        this.scene.getNonDeletedElements(),
-        this.state,
-        sceneX,
-        sceneY,
-      );
-      if (container) {
-        if (
-          hasBoundTextElement(container) ||
-          !isTransparent(container.backgroundColor) ||
-          isHittingElementNotConsideringBoundingBox(container, this.state, [
-            sceneX,
-            sceneY,
-          ])
-        ) {
-          const midPoint = getContainerCenter(container, this.state);
+      // const container = getTextBindableContainerAtPosition(
+      //   this.scene.getNonDeletedElements(),
+      //   this.state,
+      //   sceneX,
+      //   sceneY,
+      // );
+      // if (container) {
+      //   if (
+      //     hasBoundTextElement(container) ||
+      //     !isTransparent(container.backgroundColor) ||
+      //     isHittingElementNotConsideringBoundingBox(container, this.state, [
+      //       sceneX,
+      //       sceneY,
+      //     ])
+      //   ) {
+      //     const midPoint = getContainerCenter(container, this.state);
 
-          sceneX = midPoint.x;
-          sceneY = midPoint.y;
-        }
+      //     sceneX = midPoint.x;
+      //     sceneY = midPoint.y;
+      //   }
+      // }
+      const hitElement = this.getElementAtPosition(sceneX, sceneY);
+      if (isTextElement(hitElement)) {
+        this.startTextEditing({
+          sceneX,
+          sceneY,
+          insertAtParentCenter: !event.altKey,
+          container: null,
+        });
       }
-      this.startTextEditing({
-        sceneX,
-        sceneY,
-        insertAtParentCenter: !event.altKey,
-        container,
-      });
     }
   };
 
@@ -4795,68 +4794,68 @@ class App extends React.Component<AppProps, AppState> {
           );
           this.maybeSuggestBindingForAll(selectedElements);
 
-          // We duplicate the selected element if alt is pressed on pointer move
-          if (event.altKey && !pointerDownState.hit.hasBeenDuplicated) {
-            // Move the currently selected elements to the top of the z index stack, and
-            // put the duplicates where the selected elements used to be.
-            // (the origin point where the dragging started)
+          // // We duplicate the selected element if alt is pressed on pointer move
+          // if (event.altKey && !pointerDownState.hit.hasBeenDuplicated) {
+          //   // Move the currently selected elements to the top of the z index stack, and
+          //   // put the duplicates where the selected elements used to be.
+          //   // (the origin point where the dragging started)
 
-            pointerDownState.hit.hasBeenDuplicated = true;
+          //   pointerDownState.hit.hasBeenDuplicated = true;
 
-            const nextElements = [];
-            const elementsToAppend = [];
-            const groupIdMap = new Map();
-            const oldIdToDuplicatedId = new Map();
-            const hitElement = pointerDownState.hit.element;
-            const elements = this.scene.getElementsIncludingDeleted();
-            const selectedElementIds: Array<ExcalidrawElement["id"]> =
-              getSelectedElements(elements, this.state, true).map(
-                (element) => element.id,
-              );
+          //   const nextElements = [];
+          //   const elementsToAppend = [];
+          //   const groupIdMap = new Map();
+          //   const oldIdToDuplicatedId = new Map();
+          //   const hitElement = pointerDownState.hit.element;
+          //   const elements = this.scene.getElementsIncludingDeleted();
+          //   const selectedElementIds: Array<ExcalidrawElement["id"]> =
+          //     getSelectedElements(elements, this.state, true).map(
+          //       (element) => element.id,
+          //     );
 
-            for (const element of elements) {
-              if (
-                selectedElementIds.includes(element.id) ||
-                // case: the state.selectedElementIds might not have been
-                // updated yet by the time this mousemove event is fired
-                (element.id === hitElement?.id &&
-                  pointerDownState.hit.wasAddedToSelection)
-              ) {
-                const duplicatedElement = duplicateElement(
-                  this.state.editingGroupId,
-                  groupIdMap,
-                  element,
-                );
-                const [originDragX, originDragY] = getGridPoint(
-                  pointerDownState.origin.x - pointerDownState.drag.offset.x,
-                  pointerDownState.origin.y - pointerDownState.drag.offset.y,
-                  this.state.gridSize,
-                );
-                mutateElement(duplicatedElement, {
-                  x: duplicatedElement.x + (originDragX - dragX),
-                  y: duplicatedElement.y + (originDragY - dragY),
-                });
-                nextElements.push(duplicatedElement);
-                elementsToAppend.push(element);
-                oldIdToDuplicatedId.set(element.id, duplicatedElement.id);
-              } else {
-                nextElements.push(element);
-              }
-            }
-            const nextSceneElements = [...nextElements, ...elementsToAppend];
-            bindTextToShapeAfterDuplication(
-              nextElements,
-              elementsToAppend,
-              oldIdToDuplicatedId,
-            );
-            fixBindingsAfterDuplication(
-              nextSceneElements,
-              elementsToAppend,
-              oldIdToDuplicatedId,
-              "duplicatesServeAsOld",
-            );
-            this.scene.replaceAllElements(nextSceneElements);
-          }
+          //   for (const element of elements) {
+          //     if (
+          //       selectedElementIds.includes(element.id) ||
+          //       // case: the state.selectedElementIds might not have been
+          //       // updated yet by the time this mousemove event is fired
+          //       (element.id === hitElement?.id &&
+          //         pointerDownState.hit.wasAddedToSelection)
+          //     ) {
+          //       const duplicatedElement = duplicateElement(
+          //         this.state.editingGroupId,
+          //         groupIdMap,
+          //         element,
+          //       );
+          //       const [originDragX, originDragY] = getGridPoint(
+          //         pointerDownState.origin.x - pointerDownState.drag.offset.x,
+          //         pointerDownState.origin.y - pointerDownState.drag.offset.y,
+          //         this.state.gridSize,
+          //       );
+          //       mutateElement(duplicatedElement, {
+          //         x: duplicatedElement.x + (originDragX - dragX),
+          //         y: duplicatedElement.y + (originDragY - dragY),
+          //       });
+          //       nextElements.push(duplicatedElement);
+          //       elementsToAppend.push(element);
+          //       oldIdToDuplicatedId.set(element.id, duplicatedElement.id);
+          //     } else {
+          //       nextElements.push(element);
+          //     }
+          //   }
+          //   const nextSceneElements = [...nextElements, ...elementsToAppend];
+          //   bindTextToShapeAfterDuplication(
+          //     nextElements,
+          //     elementsToAppend,
+          //     oldIdToDuplicatedId,
+          //   );
+          //   fixBindingsAfterDuplication(
+          //     nextSceneElements,
+          //     elementsToAppend,
+          //     oldIdToDuplicatedId,
+          //     "duplicatesServeAsOld",
+          //   );
+          //   this.scene.replaceAllElements(nextSceneElements);
+          // }
           return;
         }
       }
@@ -6060,84 +6059,6 @@ class App extends React.Component<AppProps, AppState> {
     }
   };
 
-  private handleAppOnDrop = async (event: React.DragEvent<HTMLDivElement>) => {
-    // must be retrieved first, in the same frame
-    const { file, fileHandle } = await getFileFromEvent(event);
-
-    try {
-      if (isSupportedImageFile(file)) {
-        // first attempt to decode scene from the image if it's embedded
-        // ---------------------------------------------------------------------
-
-        if (file?.type === MIME_TYPES.png || file?.type === MIME_TYPES.svg) {
-          try {
-            const scene = await loadFromBlob(
-              file,
-              this.state,
-              this.scene.getElementsIncludingDeleted(),
-              fileHandle,
-            );
-            this.syncActionResult({
-              ...scene,
-              appState: {
-                ...(scene.appState || this.state),
-                isLoading: false,
-              },
-              replaceFiles: true,
-              commitToHistory: true,
-            });
-            return;
-          } catch (error: any) {
-            if (error.name !== "EncodingError") {
-              throw error;
-            }
-          }
-        }
-
-        // if no scene is embedded or we fail for whatever reason, fall back
-        // to importing as regular image
-        // ---------------------------------------------------------------------
-
-        const { x: sceneX, y: sceneY } = viewportCoordsToSceneCoords(
-          event,
-          this.state,
-        );
-
-        const imageElement = this.createImageElement({ sceneX, sceneY });
-        this.insertImageElement(imageElement, file);
-        this.initializeImageDimensions(imageElement);
-        this.setState({ selectedElementIds: { [imageElement.id]: true } });
-
-        return;
-      }
-    } catch (error: any) {
-      return this.setState({
-        isLoading: false,
-        errorMessage: error.message,
-      });
-    }
-
-    const libraryJSON = event.dataTransfer.getData(MIME_TYPES.excalidrawlib);
-    if (libraryJSON && typeof libraryJSON === "string") {
-      try {
-        const libraryItems = parseLibraryJSON(libraryJSON);
-        this.addElementsFromPasteOrLibrary({
-          elements: distributeLibraryItemsOnSquareGrid(libraryItems),
-          position: event,
-          files: null,
-        });
-      } catch (error: any) {
-        this.setState({ errorMessage: error.message });
-      }
-      return;
-    }
-
-    if (file) {
-      // atetmpt to parse an excalidraw/excalidrawlib file
-      await this.loadFileToCanvas(file, fileHandle);
-    }
-  };
-
   loadFileToCanvas = async (
     file: File,
     fileHandle: FileSystemHandle | null,
@@ -6409,7 +6330,6 @@ class App extends React.Component<AppProps, AppState> {
       actionGroup,
       actionUnbindText,
       actionBindText,
-      actionWrapTextInContainer,
       actionUngroup,
       CONTEXT_MENU_SEPARATOR,
       //   actionAddToLibrary,
