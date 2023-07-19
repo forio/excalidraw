@@ -622,6 +622,7 @@ export const textWysiwyg = ({
     window.removeEventListener("pointerdown", onPointerDown);
     window.removeEventListener("pointerup", bindBlurEvent);
     window.removeEventListener("blur", handleSubmit);
+    window.removeEventListener("kill-text-editor", handleSubmit);
 
     unbindUpdate();
 
@@ -739,6 +740,7 @@ export const textWysiwyg = ({
     passive: false,
     capture: true,
   });
+  window.addEventListener("kill-text-editor", handleSubmit);
   excalidrawContainer
     ?.querySelector(".excalidraw-textEditorContainer")!
     .appendChild(editable);
