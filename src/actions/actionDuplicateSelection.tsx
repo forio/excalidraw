@@ -27,7 +27,7 @@ import { DuplicateIcon } from "../components/icons";
 export const actionDuplicateSelection = register({
   name: "duplicateSelection",
   trackEvent: { category: "element" },
-  perform: (elements, appState) => {
+  perform: (elements, appState, creator) => {
     // duplicate selected point(s) if editing a line
     if (appState.editingLinearElement) {
       const ret = LinearElementEditor.duplicateSelectedPoints(appState);
@@ -44,7 +44,7 @@ export const actionDuplicateSelection = register({
     }
 
     return {
-      ...duplicateElements(elements, appState),
+      ...duplicateElements(elements, appState, creator),
       commitToHistory: true,
     };
   },
@@ -68,6 +68,7 @@ export const actionDuplicateSelection = register({
 const duplicateElements = (
   elements: readonly ExcalidrawElement[],
   appState: AppState,
+  creator: string,
 ): Partial<ActionResult> => {
   // ---------------------------------------------------------------------------
 
@@ -87,6 +88,10 @@ const duplicateElements = (
       {
         x: element.x + GRID_SIZE / 2,
         y: element.y + GRID_SIZE / 2,
+        customData: {
+          ...element.customData,
+          creator,
+        },
       },
     );
     oldIdToDuplicatedId.set(element.id, newElement.id);

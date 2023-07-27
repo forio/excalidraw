@@ -2785,6 +2785,9 @@ class App extends React.Component<AppProps, AppState> {
           groupIds: container?.groupIds ?? [],
           lineHeight,
           angle: container?.angle ?? 0,
+          customData: {
+            creator: this.props.userKey,
+          },
         });
 
     if (!existingTextElement && shouldBindToContainer && container) {
@@ -4330,6 +4333,9 @@ class App extends React.Component<AppProps, AppState> {
       roundness: null,
       simulatePressure: event.pressure === 0.5,
       locked: false,
+      customData: {
+        creator: this.props.userKey,
+      },
     });
 
     this.setState((prevState) => ({
@@ -4386,6 +4392,9 @@ class App extends React.Component<AppProps, AppState> {
       roundness: null,
       opacity: this.state.currentItemOpacity,
       locked: false,
+      customData: {
+        creator: this.props.userKey,
+      },
     });
 
     return element;
@@ -4477,6 +4486,9 @@ class App extends React.Component<AppProps, AppState> {
         startArrowhead,
         endArrowhead,
         locked: false,
+        customData: {
+          creator: this.props.userKey,
+        },
       });
       this.setState((prevState) => ({
         selectedElementIds: {
@@ -4533,6 +4545,9 @@ class App extends React.Component<AppProps, AppState> {
             }
           : null,
       locked: false,
+      customData: {
+        creator: this.props.userKey,
+      },
     });
 
     if (element.type === "selection") {

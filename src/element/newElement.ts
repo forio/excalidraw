@@ -89,6 +89,7 @@ const _newElementBase = <T extends ExcalidrawElement>(
     boundElements = null,
     link = null,
     locked = DEFAULT_ELEMENT_PROPS.locked,
+    customData,
     ...rest
   }: ElementConstructorOpts & Omit<Partial<ExcalidrawGenericElement>, "type">,
 ) => {
@@ -118,6 +119,7 @@ const _newElementBase = <T extends ExcalidrawElement>(
     updated: getUpdatedTimestamp(),
     link,
     locked,
+    customData,
   };
   return element;
 };
@@ -161,6 +163,7 @@ export const newTextElement = (
     containerId?: ExcalidrawTextContainer["id"];
     lineHeight?: ExcalidrawTextElement["lineHeight"];
     strokeWidth?: ExcalidrawTextElement["strokeWidth"];
+    customData?: ExcalidrawTextElement["customData"];
   } & ElementConstructorOpts,
 ): NonDeleted<ExcalidrawTextElement> => {
   const fontFamily = opts.fontFamily || DEFAULT_FONT_FAMILY;
@@ -195,6 +198,7 @@ export const newTextElement = (
       containerId: opts.containerId || null,
       originalText: text,
       lineHeight,
+      customData: opts.customData,
     },
     {},
   );
