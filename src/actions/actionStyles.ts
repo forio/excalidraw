@@ -56,7 +56,7 @@ export const actionCopyStyles = register({
 export const actionPasteStyles = register({
   name: "pasteStyles",
   trackEvent: { category: "element" },
-  perform: (elements, appState) => {
+  perform: (elements, appState, _, app) => {
     const elementsCopied = JSON.parse(copiedStyles);
     const pastedElement = elementsCopied[0];
     const boundTextElement = elementsCopied[1];
@@ -92,6 +92,10 @@ export const actionPasteStyles = register({
                 ? elementStylesToCopyFrom.roundness
                 : getDefaultRoundnessTypeForElement(element)
               : null,
+            customData: {
+              ...element.customData,
+              lastEditor: app?.props.userKey,
+            },
           });
 
           if (isTextElement(newElement)) {
@@ -107,6 +111,10 @@ export const actionPasteStyles = register({
               lineHeight:
                 elementStylesToCopyFrom.lineHeight ||
                 getDefaultLineHeight(fontFamily),
+              customData: {
+                ...newElement?.customData,
+                lastEditor: app?.props.userKey,
+              },
             });
             let container = null;
             if (newElement.containerId) {
@@ -124,6 +132,10 @@ export const actionPasteStyles = register({
             newElement = newElementWith(newElement, {
               startArrowhead: elementStylesToCopyFrom.startArrowhead,
               endArrowhead: elementStylesToCopyFrom.endArrowhead,
+              customData: {
+                ...newElement?.customData,
+                lastEditor: app?.props.userKey,
+              },
             });
           }
 

@@ -19,12 +19,18 @@ import { AppState } from "../types";
 export const actionFinalize = register({
   name: "finalize",
   trackEvent: false,
-  perform: (elements, appState, _, { canvas, focusContainer, scene }) => {
+  perform: (
+    elements,
+    appState,
+    _,
+    { canvas, focusContainer, scene, props },
+  ) => {
+    const lastEditor = props.userKey;
+
     if (appState.editingLinearElement) {
       const { elementId, startBindingElement, endBindingElement } =
         appState.editingLinearElement;
       const element = LinearElementEditor.getElement(elementId);
-
       if (element) {
         if (isBindingElement(element)) {
           bindOrUnbindLinearElement(
@@ -55,7 +61,17 @@ export const actionFinalize = register({
       scene.getElement(appState.pendingImageElementId);
 
     if (pendingImageElement) {
-      mutateElement(pendingImageElement, { isDeleted: true }, false);
+      mutateElement(
+        pendingImageElement,
+        {
+          isDeleted: true,
+          customData: {
+            ...pendingImageElement.customData,
+            lastEditor,
+          },
+        },
+        false,
+      );
     }
 
     if (window.document.activeElement instanceof HTMLElement) {
@@ -81,6 +97,10 @@ export const actionFinalize = register({
         ) {
           mutateElement(multiPointElement, {
             points: multiPointElement.points.slice(0, -1),
+            customData: {
+              ...multiPointElement.customData,
+              lastEditor,
+            },
           });
         }
       }
@@ -105,6 +125,10 @@ export const actionFinalize = register({
                 ? ([firstPoint[0], firstPoint[1]] as const)
                 : point,
             ),
+            customData: {
+              ...multiPointElement.customData,
+              lastEditor,
+            },
           });
         }
       }

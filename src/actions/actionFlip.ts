@@ -4,7 +4,7 @@ import { getNonDeletedElements } from "../element";
 import { mutateElement } from "../element/mutateElement";
 import { ExcalidrawElement, NonDeleted } from "../element/types";
 import { normalizeAngle, resizeSingleElement } from "../element/resizeElements";
-import { AppState } from "../types";
+import { AppState, AppClassProperties } from "../types";
 import { getTransformHandles } from "../element/transformHandles";
 import { updateBoundElements } from "../element/binding";
 import { arrayToMap } from "../utils";
@@ -41,9 +41,9 @@ const enableActionFlipVertical = (
 export const actionFlipHorizontal = register({
   name: "flipHorizontal",
   trackEvent: { category: "element" },
-  perform: (elements, appState) => {
+  perform: (elements, appState, value, app) => {
     return {
-      elements: flipSelectedElements(elements, appState, "horizontal"),
+      elements: flipSelectedElements(elements, appState, "horizontal", app),
       appState,
       commitToHistory: true,
     };
@@ -57,9 +57,9 @@ export const actionFlipHorizontal = register({
 export const actionFlipVertical = register({
   name: "flipVertical",
   trackEvent: { category: "element" },
-  perform: (elements, appState) => {
+  perform: (elements, appState, value, app) => {
     return {
-      elements: flipSelectedElements(elements, appState, "vertical"),
+      elements: flipSelectedElements(elements, appState, "vertical", app),
       appState,
       commitToHistory: true,
     };
@@ -75,6 +75,7 @@ const flipSelectedElements = (
   elements: readonly ExcalidrawElement[],
   appState: Readonly<AppState>,
   flipDirection: "horizontal" | "vertical",
+  app?: AppClassProperties,
 ) => {
   const selectedElements = getSelectedElements(
     getNonDeletedElements(elements),
@@ -90,6 +91,7 @@ const flipSelectedElements = (
     selectedElements,
     appState,
     flipDirection,
+    app,
   );
 
   const updatedElementsMap = arrayToMap(updatedElements);
@@ -103,12 +105,13 @@ const flipElements = (
   elements: NonDeleted<ExcalidrawElement>[],
   appState: AppState,
   flipDirection: "horizontal" | "vertical",
+  app?: AppClassProperties,
 ): ExcalidrawElement[] => {
   elements.forEach((element) => {
-    flipElement(element, appState);
+    flipElement(element, appState, app);
     // If vertical flip, rotate an extra 180
     if (flipDirection === "vertical") {
-      rotateElement(element, Math.PI);
+      rotateElement(element, Math.PI, app);
     }
   });
   return elements;
@@ -117,6 +120,7 @@ const flipElements = (
 const flipElement = (
   element: NonDeleted<ExcalidrawElement>,
   appState: AppState,
+  app?: AppClassProperties,
 ) => {
   const originalX = element.x;
   const originalY = element.y;
@@ -127,6 +131,10 @@ const flipElement = (
   // Rotate back to zero, if necessary
   mutateElement(element, {
     angle: normalizeAngle(0),
+    customData: {
+      ...element.customData,
+      lastEditor: app?.props.userKey,
+    },
   });
   // Flip unrotated by pulling TransformHandle to opposite side
   const transformHandles = getTransformHandles(element, appState.zoom);
@@ -139,6 +147,10 @@ const flipElement = (
     if (!nHandle) {
       mutateElement(element, {
         angle: originalAngle,
+        customData: {
+          ...element.customData,
+          lastEditor: app?.props.userKey,
+        },
       });
       return;
     }
@@ -195,6 +207,10 @@ const flipElement = (
   }
   mutateElement(element, {
     angle,
+    customData: {
+      ...element.customData,
+      lastEditor: app?.props.userKey,
+    },
   });
 
   // Move back to original spot to appear "flipped in place"
@@ -203,6 +219,10 @@ const flipElement = (
     y: originalY,
     width,
     height,
+    customData: {
+      ...element.customData,
+      lastEditor: app?.props.userKey,
+    },
   });
 
   updateBoundElements(element);
@@ -223,11 +243,19 @@ const flipElement = (
       y: element.y,
       width,
       height,
+      customData: {
+        ...element.customData,
+        lastEditor: app?.props.userKey,
+      },
     });
   }
 };
 
-const rotateElement = (element: ExcalidrawElement, rotationAngle: number) => {
+const rotateElement = (
+  element: ExcalidrawElement,
+  rotationAngle: number,
+  app?: AppClassProperties,
+) => {
   const originalX = element.x;
   const originalY = element.y;
   let angle = normalizeAngle(element.angle + rotationAngle);
@@ -237,11 +265,19 @@ const rotateElement = (element: ExcalidrawElement, rotationAngle: number) => {
   }
   mutateElement(element, {
     angle,
+    customData: {
+      ...element.customData,
+      lastEditor: app?.props.userKey,
+    },
   });
 
   // Move back to original spot
   mutateElement(element, {
     x: originalX,
     y: originalY,
+    customData: {
+      ...element.customData,
+      lastEditor: app?.props.userKey,
+    },
   });
 };

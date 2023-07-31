@@ -1,4 +1,4 @@
-import { AppState } from "../../src/types";
+import { AppState, AppClassProperties } from "../../src/types";
 import {
   DEFAULT_ELEMENT_BACKGROUND_COLOR_PALETTE,
   DEFAULT_ELEMENT_BACKGROUND_PICKS,
@@ -165,6 +165,7 @@ const changeFontSize = (
   appState: AppState,
   getNewFontSize: (element: ExcalidrawTextElement) => number,
   fallbackValue?: ExcalidrawTextElement["fontSize"],
+  app?: AppClassProperties,
 ) => {
   const newFontSizes = new Set<number>();
 
@@ -179,6 +180,10 @@ const changeFontSize = (
 
           let newElement: ExcalidrawTextElement = newElementWith(oldElement, {
             fontSize: newFontSize,
+            customData: {
+              ...oldElement.customData,
+              lastEditor: app?.props.userKey,
+            },
           });
           redrawTextBoundingBox(newElement, getContainerElement(oldElement));
 
@@ -209,7 +214,7 @@ const changeFontSize = (
 export const actionChangeStrokeColor = register({
   name: "changeStrokeColor",
   trackEvent: false,
-  perform: (elements, appState, value) => {
+  perform: (elements, appState, value, app) => {
     return {
       ...(value.currentItemStrokeColor && {
         elements: changeProperty(
@@ -219,6 +224,10 @@ export const actionChangeStrokeColor = register({
             return hasStrokeColor(el.type)
               ? newElementWith(el, {
                   strokeColor: value.currentItemStrokeColor,
+                  customData: {
+                    ...el.customData,
+                    lastEditor: app?.props.userKey,
+                  },
                 })
               : el;
           },
@@ -258,13 +267,21 @@ export const actionChangeStrokeColor = register({
 export const actionChangeBackgroundColor = register({
   name: "changeBackgroundColor",
   trackEvent: false,
-  perform: (elements, appState, value) => {
+  perform: (elements, appState, value, app) => {
     return {
       ...(value.currentItemBackgroundColor && {
-        elements: changeProperty(elements, appState, (el) =>
-          newElementWith(el, {
-            backgroundColor: value.currentItemBackgroundColor,
-          }),
+        elements: changeProperty(
+          elements,
+          appState,
+          (el) =>
+            newElementWith(el, {
+              backgroundColor: value.currentItemBackgroundColor,
+              customData: {
+                ...el.customData,
+                lastEditor: app?.props.userKey,
+              },
+            }),
+          false,
         ),
       }),
       appState: {
@@ -307,10 +324,18 @@ export const actionChangeFillStyle = register({
       `${value} (${app.device.isMobile ? "mobile" : "desktop"})`,
     );
     return {
-      elements: changeProperty(elements, appState, (el) =>
-        newElementWith(el, {
-          fillStyle: value,
-        }),
+      elements: changeProperty(
+        elements,
+        appState,
+        (el) =>
+          newElementWith(el, {
+            fillStyle: value,
+            customData: {
+              ...el.customData,
+              lastEditor: app?.props.userKey,
+            },
+          }),
+        false,
       ),
       appState: { ...appState, currentItemFillStyle: value },
       commitToHistory: true,
@@ -372,12 +397,20 @@ export const actionChangeFillStyle = register({
 export const actionChangeStrokeWidth = register({
   name: "changeStrokeWidth",
   trackEvent: false,
-  perform: (elements, appState, value) => {
+  perform: (elements, appState, value, app) => {
     return {
-      elements: changeProperty(elements, appState, (el) =>
-        newElementWith(el, {
-          strokeWidth: value,
-        }),
+      elements: changeProperty(
+        elements,
+        appState,
+        (el) =>
+          newElementWith(el, {
+            strokeWidth: value,
+            customData: {
+              ...el.customData,
+              lastEditor: app?.props.userKey,
+            },
+          }),
+        false,
       ),
       appState: { ...appState, currentItemStrokeWidth: value },
       commitToHistory: true,
@@ -420,13 +453,21 @@ export const actionChangeStrokeWidth = register({
 export const actionChangeSloppiness = register({
   name: "changeSloppiness",
   trackEvent: false,
-  perform: (elements, appState, value) => {
+  perform: (elements, appState, value, app) => {
     return {
-      elements: changeProperty(elements, appState, (el) =>
-        newElementWith(el, {
-          seed: randomInteger(),
-          roughness: value,
-        }),
+      elements: changeProperty(
+        elements,
+        appState,
+        (el) =>
+          newElementWith(el, {
+            seed: randomInteger(),
+            roughness: value,
+            customData: {
+              ...el.customData,
+              lastEditor: app?.props.userKey,
+            },
+          }),
+        false,
       ),
       appState: { ...appState, currentItemRoughness: value },
       commitToHistory: true,
@@ -469,12 +510,20 @@ export const actionChangeSloppiness = register({
 export const actionChangeStrokeStyle = register({
   name: "changeStrokeStyle",
   trackEvent: false,
-  perform: (elements, appState, value) => {
+  perform: (elements, appState, value, app) => {
     return {
-      elements: changeProperty(elements, appState, (el) =>
-        newElementWith(el, {
-          strokeStyle: value,
-        }),
+      elements: changeProperty(
+        elements,
+        appState,
+        (el) =>
+          newElementWith(el, {
+            strokeStyle: value,
+            customData: {
+              ...el.customData,
+              lastEditor: app?.props.userKey,
+            },
+          }),
+        false,
       ),
       appState: { ...appState, currentItemStrokeStyle: value },
       commitToHistory: true,
@@ -517,7 +566,7 @@ export const actionChangeStrokeStyle = register({
 export const actionChangeOpacity = register({
   name: "changeOpacity",
   trackEvent: false,
-  perform: (elements, appState, value) => {
+  perform: (elements, appState, value, app) => {
     return {
       elements: changeProperty(
         elements,
@@ -525,6 +574,10 @@ export const actionChangeOpacity = register({
         (el) =>
           newElementWith(el, {
             opacity: value,
+            customData: {
+              ...el.customData,
+              lastEditor: app?.props.userKey,
+            },
           }),
         true,
       ),
@@ -557,8 +610,8 @@ export const actionChangeOpacity = register({
 export const actionChangeFontSize = register({
   name: "changeFontSize",
   trackEvent: false,
-  perform: (elements, appState, value) => {
-    return changeFontSize(elements, appState, () => value, value);
+  perform: (elements, appState, value, app) => {
+    return changeFontSize(elements, appState, () => value, value, app);
   },
   PanelComponent: ({ elements, appState, updateData }) => (
     <fieldset>
@@ -615,13 +668,18 @@ export const actionChangeFontSize = register({
 export const actionDecreaseFontSize = register({
   name: "decreaseFontSize",
   trackEvent: false,
-  perform: (elements, appState, value) => {
-    return changeFontSize(elements, appState, (element) =>
-      Math.round(
-        // get previous value before relative increase (doesn't work fully
-        // due to rounding and float precision issues)
-        (1 / (1 + FONT_SIZE_RELATIVE_INCREASE_STEP)) * element.fontSize,
-      ),
+  perform: (elements, appState, value, app) => {
+    return changeFontSize(
+      elements,
+      appState,
+      (element) =>
+        Math.round(
+          // get previous value before relative increase (doesn't work fully
+          // due to rounding and float precision issues)
+          (1 / (1 + FONT_SIZE_RELATIVE_INCREASE_STEP)) * element.fontSize,
+        ),
+      value,
+      app,
     );
   },
   keyTest: (event) => {
@@ -637,9 +695,14 @@ export const actionDecreaseFontSize = register({
 export const actionIncreaseFontSize = register({
   name: "increaseFontSize",
   trackEvent: false,
-  perform: (elements, appState, value) => {
-    return changeFontSize(elements, appState, (element) =>
-      Math.round(element.fontSize * (1 + FONT_SIZE_RELATIVE_INCREASE_STEP)),
+  perform: (elements, appState, value, app) => {
+    return changeFontSize(
+      elements,
+      appState,
+      (element) =>
+        Math.round(element.fontSize * (1 + FONT_SIZE_RELATIVE_INCREASE_STEP)),
+      value,
+      app,
     );
   },
   keyTest: (event) => {
@@ -655,7 +718,7 @@ export const actionIncreaseFontSize = register({
 export const actionChangeFontFamily = register({
   name: "changeFontFamily",
   trackEvent: false,
-  perform: (elements, appState, value) => {
+  perform: (elements, appState, value, app) => {
     return {
       elements: changeProperty(
         elements,
@@ -667,6 +730,10 @@ export const actionChangeFontFamily = register({
               {
                 fontFamily: value,
                 lineHeight: getDefaultLineHeight(value),
+                customData: {
+                  ...oldElement.customData,
+                  lastEditor: app?.props.userKey,
+                },
               },
             );
             redrawTextBoundingBox(newElement, getContainerElement(oldElement));
@@ -738,7 +805,7 @@ export const actionChangeFontFamily = register({
 export const actionChangeTextAlign = register({
   name: "changeTextAlign",
   trackEvent: false,
-  perform: (elements, appState, value) => {
+  perform: (elements, appState, value, app) => {
     return {
       elements: changeProperty(
         elements,
@@ -747,7 +814,13 @@ export const actionChangeTextAlign = register({
           if (isTextElement(oldElement)) {
             const newElement: ExcalidrawTextElement = newElementWith(
               oldElement,
-              { textAlign: value },
+              {
+                textAlign: value,
+                customData: {
+                  ...oldElement.customData,
+                  lastEditor: app?.props.userKey,
+                },
+              },
             );
             redrawTextBoundingBox(newElement, getContainerElement(oldElement));
             return newElement;
@@ -814,7 +887,7 @@ export const actionChangeTextAlign = register({
 export const actionChangeVerticalAlign = register({
   name: "changeVerticalAlign",
   trackEvent: { category: "element" },
-  perform: (elements, appState, value) => {
+  perform: (elements, appState, value, app) => {
     return {
       elements: changeProperty(
         elements,
@@ -823,7 +896,13 @@ export const actionChangeVerticalAlign = register({
           if (isTextElement(oldElement)) {
             const newElement: ExcalidrawTextElement = newElementWith(
               oldElement,
-              { verticalAlign: value },
+              {
+                verticalAlign: value,
+                customData: {
+                  ...oldElement.customData,
+                  lastEditor: app?.props.userKey,
+                },
+              },
             );
 
             redrawTextBoundingBox(newElement, getContainerElement(oldElement));
@@ -885,19 +964,27 @@ export const actionChangeVerticalAlign = register({
 export const actionChangeRoundness = register({
   name: "changeRoundness",
   trackEvent: false,
-  perform: (elements, appState, value) => {
+  perform: (elements, appState, value, app) => {
     return {
-      elements: changeProperty(elements, appState, (el) =>
-        newElementWith(el, {
-          roundness:
-            value === "round"
-              ? {
-                  type: isUsingAdaptiveRadius(el.type)
-                    ? ROUNDNESS.ADAPTIVE_RADIUS
-                    : ROUNDNESS.PROPORTIONAL_RADIUS,
-                }
-              : null,
-        }),
+      elements: changeProperty(
+        elements,
+        appState,
+        (el) =>
+          newElementWith(el, {
+            roundness:
+              value === "round"
+                ? {
+                    type: isUsingAdaptiveRadius(el.type)
+                      ? ROUNDNESS.ADAPTIVE_RADIUS
+                      : ROUNDNESS.PROPORTIONAL_RADIUS,
+                  }
+                : null,
+            customData: {
+              ...el.customData,
+              lastEditor: app?.props.userKey,
+            },
+          }),
+        false,
       ),
       appState: {
         ...appState,
@@ -956,27 +1043,41 @@ export const actionChangeArrowhead = register({
     elements,
     appState,
     value: { position: "start" | "end"; type: Arrowhead },
+    app,
   ) => {
     return {
-      elements: changeProperty(elements, appState, (el) => {
-        if (isLinearElement(el)) {
-          const { position, type } = value;
+      elements: changeProperty(
+        elements,
+        appState,
+        (el) => {
+          if (isLinearElement(el)) {
+            const { position, type } = value;
 
-          if (position === "start") {
-            const element: ExcalidrawLinearElement = newElementWith(el, {
-              startArrowhead: type,
-            });
-            return element;
-          } else if (position === "end") {
-            const element: ExcalidrawLinearElement = newElementWith(el, {
-              endArrowhead: type,
-            });
-            return element;
+            if (position === "start") {
+              const element: ExcalidrawLinearElement = newElementWith(el, {
+                startArrowhead: type,
+                customData: {
+                  ...el.customData,
+                  lastEditor: app?.props.userKey,
+                },
+              });
+              return element;
+            } else if (position === "end") {
+              const element: ExcalidrawLinearElement = newElementWith(el, {
+                endArrowhead: type,
+                customData: {
+                  ...el.customData,
+                  lastEditor: app?.props.userKey,
+                },
+              });
+              return element;
+            }
           }
-        }
 
-        return el;
-      }),
+          return el;
+        },
+        false,
+      ),
       appState: {
         ...appState,
         [value.position === "start"

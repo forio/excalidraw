@@ -785,6 +785,7 @@ class App extends React.Component<AppProps, AppState> {
         if (typeof this.props.name !== "undefined") {
           name = this.props.name;
         }
+
         this.setState(
           (state) => {
             // using Object.assign instead of spread to fool TS 4.2.2+ into
@@ -2226,6 +2227,10 @@ class App extends React.Component<AppProps, AppState> {
           mutateElement(element, {
             x: element.x + offsetX,
             y: element.y + offsetY,
+            customData: {
+              ...element.customData,
+              lastEditor: this.props.userKey,
+            },
           });
 
           updateBoundElements(element, {
@@ -2744,7 +2749,14 @@ class App extends React.Component<AppProps, AppState> {
       const containerDims = getContainerDims(container);
       const newHeight = Math.max(containerDims.height, minHeight);
       const newWidth = Math.max(containerDims.width, minWidth);
-      mutateElement(container, { height: newHeight, width: newWidth });
+      mutateElement(container, {
+        height: newHeight,
+        width: newWidth,
+        customData: {
+          ...container.customData,
+          lastEditor: this.props.userKey,
+        },
+      });
       sceneX = container.x + newWidth / 2;
       sceneY = container.y + newHeight / 2;
       if (parentCenterPosition) {
@@ -2786,7 +2798,9 @@ class App extends React.Component<AppProps, AppState> {
           lineHeight,
           angle: container?.angle ?? 0,
           customData: {
+            ...container?.customData,
             creator: this.props.userKey,
+            lastEditor: this.props.userKey,
           },
         });
 
@@ -2796,6 +2810,10 @@ class App extends React.Component<AppProps, AppState> {
           type: "text",
           id: element.id,
         }),
+        customData: {
+          ...container.customData,
+          lastEditor: this.props.userKey,
+        },
       });
     }
     this.setState({ editingElement: element });
@@ -3169,6 +3187,10 @@ class App extends React.Component<AppProps, AppState> {
         ) {
           mutateElement(multiElement, {
             points: [...points, [scenePointerX - rx, scenePointerY - ry]],
+            customData: {
+              ...multiElement.customData,
+              lastEditor: this.props.userKey,
+            },
           });
         } else {
           setCursor(this.canvas, CURSOR_TYPE.POINTER);
@@ -3188,6 +3210,10 @@ class App extends React.Component<AppProps, AppState> {
         setCursor(this.canvas, CURSOR_TYPE.POINTER);
         mutateElement(multiElement, {
           points: points.slice(0, -1),
+          customData: {
+            ...multiElement.customData,
+            lastEditor: this.props.userKey,
+          },
         });
       } else {
         const [gridX, gridY] = getGridPoint(
@@ -3226,6 +3252,10 @@ class App extends React.Component<AppProps, AppState> {
               lastCommittedY + dyFromLastCommitted,
             ],
           ],
+          customData: {
+            ...multiElement.customData,
+            lastEditor: this.props.userKey,
+          },
         });
       }
 
@@ -3695,6 +3725,10 @@ class App extends React.Component<AppProps, AppState> {
       mutateElement(pendingImageElement, {
         x,
         y,
+        customData: {
+          ...pendingImageElement.customData,
+          lastEditor: this.props.userKey,
+        },
       });
     } else if (this.state.activeTool.type === "freedraw") {
       this.handleFreeDrawElementOnPointerDown(
@@ -4112,6 +4146,7 @@ class App extends React.Component<AppProps, AppState> {
             this.history,
             pointerDownState.origin,
             linearElementEditor,
+            this.props.userKey,
           );
           if (ret.hitElement) {
             pointerDownState.hit.element = ret.hitElement;
@@ -4806,6 +4841,7 @@ class App extends React.Component<AppProps, AppState> {
             dragDistanceX,
             dragDistanceY,
             this.state,
+            this.props.userKey,
           );
           this.maybeSuggestBindingForAll(selectedElements);
 
@@ -4899,6 +4935,10 @@ class App extends React.Component<AppProps, AppState> {
           mutateElement(draggingElement, {
             points: [...points, [dx, dy]],
             pressures,
+            customData: {
+              ...draggingElement.customData,
+              lastEditor: this.props.userKey,
+            },
           });
         }
       } else if (isLinearElement(draggingElement)) {
@@ -4919,10 +4959,18 @@ class App extends React.Component<AppProps, AppState> {
         if (points.length === 1) {
           mutateElement(draggingElement, {
             points: [...points, [dx, dy]],
+            customData: {
+              ...draggingElement.customData,
+              lastEditor: this.props.userKey,
+            },
           });
         } else if (points.length === 2) {
           mutateElement(draggingElement, {
             points: [...points.slice(0, -1), [dx, dy]],
+            customData: {
+              ...draggingElement.customData,
+              lastEditor: this.props.userKey,
+            },
           });
         }
 
@@ -5199,6 +5247,10 @@ class App extends React.Component<AppProps, AppState> {
           points: [...points, [dx, dy]],
           pressures,
           lastCommittedPoint: [dx, dy],
+          customData: {
+            ...draggingElement.customData,
+            lastEditor: this.props.userKey,
+          },
         });
 
         this.actionManager.executeAction(actionFinalize);
@@ -5249,6 +5301,10 @@ class App extends React.Component<AppProps, AppState> {
                 pointerCoords.y - draggingElement.y,
               ],
             ],
+            customData: {
+              ...draggingElement.customData,
+              lastEditor: this.props.userKey,
+            },
           });
           this.setState({
             multiElement: draggingElement,
@@ -5308,10 +5364,13 @@ class App extends React.Component<AppProps, AppState> {
       }
 
       if (draggingElement) {
-        mutateElement(
-          draggingElement,
-          getNormalizedDimensions(draggingElement),
-        );
+        mutateElement(draggingElement, {
+          ...getNormalizedDimensions(draggingElement),
+          customData: {
+            ...draggingElement.customData,
+            lastEditor: this.props.userKey,
+          },
+        });
       }
 
       if (resizingElement) {
@@ -5870,6 +5929,10 @@ class App extends React.Component<AppProps, AppState> {
           y: imageElement.y - placeholderSize / 2,
           width: placeholderSize,
           height: placeholderSize,
+          customData: {
+            ...imageElement.customData,
+            lastEditor: this.props.userKey,
+          },
         });
       }
 
@@ -5899,7 +5962,16 @@ class App extends React.Component<AppProps, AppState> {
       const x = imageElement.x + imageElement.width / 2 - width / 2;
       const y = imageElement.y + imageElement.height / 2 - height / 2;
 
-      mutateElement(imageElement, { x, y, width, height });
+      mutateElement(imageElement, {
+        x,
+        y,
+        width,
+        height,
+        customData: {
+          ...imageElement.customData,
+          lastEditor: this.props.userKey,
+        },
+      });
     }
   };
 
@@ -6277,6 +6349,7 @@ class App extends React.Component<AppProps, AppState> {
         resizeY,
         pointerDownState.resize.center.x,
         pointerDownState.resize.center.y,
+        this.props.userKey,
       )
     ) {
       this.maybeSuggestBindingForAll(selectedElements);

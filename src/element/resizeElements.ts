@@ -70,6 +70,7 @@ export const transformElements = (
   pointerY: number,
   centerX: number,
   centerY: number,
+  userKey?: string,
 ) => {
   if (selectedElements.length === 1) {
     const [element] = selectedElements;
@@ -80,6 +81,7 @@ export const transformElements = (
         pointerY,
         shouldRotateWithDiscreteAngle,
         pointerDownState.originalElements,
+        userKey,
       );
       updateBoundElements(element);
     } else if (
@@ -95,6 +97,7 @@ export const transformElements = (
         shouldResizeFromCenter,
         pointerX,
         pointerY,
+        userKey,
       );
       updateBoundElements(element);
     } else if (transformHandleType) {
@@ -106,6 +109,7 @@ export const transformElements = (
         shouldResizeFromCenter,
         pointerX,
         pointerY,
+        userKey,
       );
     }
 
@@ -120,6 +124,7 @@ export const transformElements = (
         shouldRotateWithDiscreteAngle,
         centerX,
         centerY,
+        userKey,
       );
       return true;
     } else if (
@@ -135,6 +140,7 @@ export const transformElements = (
         shouldResizeFromCenter,
         pointerX,
         pointerY,
+        userKey,
       );
       return true;
     }
@@ -148,6 +154,7 @@ const rotateSingleElement = (
   pointerY: number,
   shouldRotateWithDiscreteAngle: boolean,
   originalElements: Map<string, NonDeleted<ExcalidrawElement>>,
+  userKey?: string,
 ) => {
   const [x1, y1, x2, y2] = getElementAbsoluteCoords(element);
   const cx = (x1 + x2) / 2;
@@ -248,6 +255,7 @@ const resizeSingleTextElement = (
   shouldResizeFromCenter: boolean,
   pointerX: number,
   pointerY: number,
+  userKey?: string,
 ) => {
   const [x1, y1, x2, y2] = getElementAbsoluteCoords(element);
   const cx = (x1 + x2) / 2;
@@ -333,6 +341,7 @@ export const resizeSingleElement = (
   shouldResizeFromCenter: boolean,
   pointerX: number,
   pointerY: number,
+  userKey?: string,
 ) => {
   const stateAtResizeStart = originalElements.get(element.id)!;
   // Gets bounds corners
@@ -561,6 +570,10 @@ export const resizeSingleElement = (
     x: newOrigin[0],
     y: newOrigin[1],
     points: rescaledPoints,
+    customData: {
+      ...element.customData,
+      lastEditor: userKey,
+    },
   };
 
   if ("scale" in element && "scale" in stateAtResizeStart) {
@@ -572,6 +585,10 @@ export const resizeSingleElement = (
         (Math.sign(newBoundsY2 - stateAtResizeStart.y) ||
           stateAtResizeStart.scale[1]) * stateAtResizeStart.scale[1],
       ],
+      customData: {
+        ...element.customData,
+        lastEditor: userKey,
+      },
     });
   }
 
@@ -603,6 +620,7 @@ const resizeMultipleElements = (
   shouldResizeFromCenter: boolean,
   pointerX: number,
   pointerY: number,
+  userKey?: string,
 ) => {
   // map selected elements to the original elements. While it never should
   // happen that pointerDownState.originalElements won't contain the selected
@@ -744,10 +762,22 @@ const resizeMultipleElements = (
 
     updateBoundElements(element.latest, { newSize: { width, height } });
 
-    mutateElement(element.latest, update);
+    mutateElement(element.latest, {
+      ...update,
+      customData: {
+        ...element.latest.customData,
+        lastEditor: userKey,
+      },
+    });
 
     if (boundTextElement && boundTextUpdates) {
-      mutateElement(boundTextElement, boundTextUpdates);
+      mutateElement(boundTextElement, {
+        ...boundTextUpdates,
+        customData: {
+          ...boundTextElement.customData,
+          lastEditor: userKey,
+        },
+      });
 
       handleBindTextResize(element.latest, transformHandleType);
     }
@@ -762,6 +792,7 @@ const rotateMultipleElements = (
   shouldRotateWithDiscreteAngle: boolean,
   centerX: number,
   centerY: number,
+  userKey?: string,
 ) => {
   let centerAngle =
     (5 * Math.PI) / 2 + Math.atan2(pointerY - centerY, pointerX - centerX);
@@ -786,6 +817,10 @@ const rotateMultipleElements = (
       x: element.x + (rotatedCX - cx),
       y: element.y + (rotatedCY - cy),
       angle: normalizeAngle(centerAngle + origAngle),
+      customData: {
+        ...element.customData,
+        lastEditor: userKey,
+      },
     });
     const boundTextElementId = getBoundTextElementId(element);
     if (boundTextElementId) {
@@ -798,6 +833,10 @@ const rotateMultipleElements = (
           x: textElement.x + (rotatedCX - cx),
           y: textElement.y + (rotatedCY - cy),
           angle: normalizeAngle(centerAngle + origAngle),
+          customData: {
+            ...element.customData,
+            lastEditor: userKey,
+          },
         });
       }
     }

@@ -350,6 +350,7 @@ export interface ExcalidrawProps {
   ) => void;
   onScrollChange?: (scrollX: number, scrollY: number) => void;
   children?: React.ReactNode;
+  userKey?: string;
 }
 
 export type SceneData = {

@@ -2,6 +2,7 @@ import { ExcalidrawElement } from "./element/types";
 import { newElementWith } from "./element/mutateElement";
 import { Box, getCommonBoundingBox } from "./element/bounds";
 import { getMaximumGroups } from "./groups";
+import { AppClassProperties } from "./types";
 
 export interface Alignment {
   position: "start" | "center" | "end";
@@ -11,6 +12,7 @@ export interface Alignment {
 export const alignElements = (
   selectedElements: ExcalidrawElement[],
   alignment: Alignment,
+  app?: AppClassProperties,
 ): ExcalidrawElement[] => {
   const groups: ExcalidrawElement[][] = getMaximumGroups(selectedElements);
 
@@ -26,6 +28,10 @@ export const alignElements = (
       newElementWith(element, {
         x: element.x + translation.x,
         y: element.y + translation.y,
+        customData: {
+          ...element.customData,
+          lastEditor: app?.props.userKey,
+        }
       }),
     );
   });
