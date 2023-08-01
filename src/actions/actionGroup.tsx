@@ -122,6 +122,11 @@ export const actionGroup = register({
       ...elementsAfterGroup,
     ];
 
+    const handleGroup = app?.props.onGroup;
+    if (handleGroup) {
+      handleGroup();
+    }
+
     return {
       appState: selectGroup(
         newGroupId,

@@ -119,6 +119,7 @@ const ExcalidrawBase = (props: ExcalidrawProps) => {
           onScrollChange={onScrollChange}
           ToolStack={props.ToolStack}
           userKey={props.userKey}
+          onGroup={props.onGroup}
         >
           {children}
         </App>
