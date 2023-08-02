@@ -13,7 +13,7 @@ import { ExcalidrawElement } from "../element/types";
 import { t } from "../i18n";
 import { KEYS } from "../keys";
 import { getSelectedElements, isSomeElementSelected } from "../scene";
-import { AppState } from "../types";
+import { AppClassProperties, AppState } from "../types";
 import { arrayToMap, getShortcutKey } from "../utils";
 import { register } from "./register";
 
@@ -26,13 +26,14 @@ const alignSelectedElements = (
   elements: readonly ExcalidrawElement[],
   appState: Readonly<AppState>,
   alignment: Alignment,
+  app?: AppClassProperties,
 ) => {
   const selectedElements = getSelectedElements(
     getNonDeletedElements(elements),
     appState,
   );
 
-  const updatedElements = alignElements(selectedElements, alignment);
+  const updatedElements = alignElements(selectedElements, alignment, app);
 
   const updatedElementsMap = arrayToMap(updatedElements);
 
@@ -44,13 +45,18 @@ const alignSelectedElements = (
 export const actionAlignTop = register({
   name: "alignTop",
   trackEvent: { category: "element" },
-  perform: (elements, appState) => {
+  perform: (elements, appState, _, app) => {
     return {
       appState,
-      elements: alignSelectedElements(elements, appState, {
-        position: "start",
-        axis: "y",
-      }),
+      elements: alignSelectedElements(
+        elements,
+        appState,
+        {
+          position: "start",
+          axis: "y",
+        },
+        app,
+      ),
       commitToHistory: true,
     };
   },
@@ -74,13 +80,18 @@ export const actionAlignTop = register({
 export const actionAlignBottom = register({
   name: "alignBottom",
   trackEvent: { category: "element" },
-  perform: (elements, appState) => {
+  perform: (elements, appState, _, app) => {
     return {
       appState,
-      elements: alignSelectedElements(elements, appState, {
-        position: "end",
-        axis: "y",
-      }),
+      elements: alignSelectedElements(
+        elements,
+        appState,
+        {
+          position: "end",
+          axis: "y",
+        },
+        app,
+      ),
       commitToHistory: true,
     };
   },
@@ -104,13 +115,18 @@ export const actionAlignBottom = register({
 export const actionAlignLeft = register({
   name: "alignLeft",
   trackEvent: { category: "element" },
-  perform: (elements, appState) => {
+  perform: (elements, appState, _, app) => {
     return {
       appState,
-      elements: alignSelectedElements(elements, appState, {
-        position: "start",
-        axis: "x",
-      }),
+      elements: alignSelectedElements(
+        elements,
+        appState,
+        {
+          position: "start",
+          axis: "x",
+        },
+        app,
+      ),
       commitToHistory: true,
     };
   },
@@ -135,13 +151,18 @@ export const actionAlignRight = register({
   name: "alignRight",
   trackEvent: { category: "element" },
 
-  perform: (elements, appState) => {
+  perform: (elements, appState, _, app) => {
     return {
       appState,
-      elements: alignSelectedElements(elements, appState, {
-        position: "end",
-        axis: "x",
-      }),
+      elements: alignSelectedElements(
+        elements,
+        appState,
+        {
+          position: "end",
+          axis: "x",
+        },
+        app,
+      ),
       commitToHistory: true,
     };
   },
@@ -166,13 +187,18 @@ export const actionAlignVerticallyCentered = register({
   name: "alignVerticallyCentered",
   trackEvent: { category: "element" },
 
-  perform: (elements, appState) => {
+  perform: (elements, appState, _, app) => {
     return {
       appState,
-      elements: alignSelectedElements(elements, appState, {
-        position: "center",
-        axis: "y",
-      }),
+      elements: alignSelectedElements(
+        elements,
+        appState,
+        {
+          position: "center",
+          axis: "y",
+        },
+        app,
+      ),
       commitToHistory: true,
     };
   },
@@ -192,13 +218,18 @@ export const actionAlignVerticallyCentered = register({
 export const actionAlignHorizontallyCentered = register({
   name: "alignHorizontallyCentered",
   trackEvent: { category: "element" },
-  perform: (elements, appState) => {
+  perform: (elements, appState, _, app) => {
     return {
       appState,
-      elements: alignSelectedElements(elements, appState, {
-        position: "center",
-        axis: "x",
-      }),
+      elements: alignSelectedElements(
+        elements,
+        appState,
+        {
+          position: "center",
+          axis: "x",
+        },
+        app,
+      ),
       commitToHistory: true,
     };
   },

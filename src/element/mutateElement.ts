@@ -6,6 +6,7 @@ import { randomInteger } from "../random";
 import { Point } from "../types";
 import { getUpdatedTimestamp } from "../utils";
 import { Mutable } from "../utility-types";
+import { AppClassProperties } from "../types";
 
 type ElementUpdate<TElement extends ExcalidrawElement> = Omit<
   Partial<TElement>,
@@ -143,9 +144,14 @@ export const newElementWith = <TElement extends ExcalidrawElement>(
 export const bumpVersion = (
   element: Mutable<ExcalidrawElement>,
   version?: ExcalidrawElement["version"],
+  app?: AppClassProperties,
 ) => {
   element.version = (version ?? element.version) + 1;
   element.versionNonce = randomInteger();
   element.updated = getUpdatedTimestamp();
+  element.customData = {
+    ...element.customData,
+    lastEditor: app?.props?.userKey,
+  };
   return element;
 };

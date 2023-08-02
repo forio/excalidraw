@@ -20,7 +20,7 @@ import { isDarwin } from "../constants";
 export const actionSendBackward = register({
   name: "sendBackward",
   trackEvent: { category: "element" },
-  perform: (elements, appState) => {
+  perform: (elements, appState, _, app) => {
     return {
       elements: moveOneLeft(elements, appState),
       appState,
@@ -48,7 +48,7 @@ export const actionSendBackward = register({
 export const actionBringForward = register({
   name: "bringForward",
   trackEvent: { category: "element" },
-  perform: (elements, appState) => {
+  perform: (elements, appState, _, app) => {
     return {
       elements: moveOneRight(elements, appState),
       appState,
@@ -76,7 +76,7 @@ export const actionBringForward = register({
 export const actionSendToBack = register({
   name: "sendToBack",
   trackEvent: { category: "element" },
-  perform: (elements, appState) => {
+  perform: (elements, appState, _, app) => {
     return {
       elements: moveAllLeft(elements, appState),
       appState,
@@ -112,7 +112,7 @@ export const actionBringToFront = register({
   name: "bringToFront",
   trackEvent: { category: "element" },
 
-  perform: (elements, appState) => {
+  perform: (elements, appState, _, app) => {
     return {
       elements: moveAllRight(elements, appState),
       appState,

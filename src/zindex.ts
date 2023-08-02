@@ -3,7 +3,7 @@ import { ExcalidrawElement } from "./element/types";
 import { getElementsInGroup } from "./groups";
 import { getSelectedElements } from "./scene";
 import Scene from "./scene/Scene";
-import { AppState } from "./types";
+import { AppState, AppClassProperties } from "./types";
 import { arrayToMap, findIndex, findLastIndex } from "./utils";
 
 /**
@@ -183,6 +183,7 @@ const shiftElements = (
   appState: AppState,
   elements: readonly ExcalidrawElement[],
   direction: "left" | "right",
+  app?: AppClassProperties,
 ) => {
   const indicesToMove = getIndicesToMove(elements, appState);
   const targetElementsMap = getTargetElementsMap(elements, indicesToMove);
@@ -240,7 +241,7 @@ const shiftElements = (
 
   return elements.map((element) => {
     if (targetElementsMap[element.id]) {
-      return bumpVersion(element);
+      return bumpVersion(element, undefined, app);
     }
     return element;
   });
@@ -250,6 +251,7 @@ const shiftElementsToEnd = (
   elements: readonly ExcalidrawElement[],
   appState: AppState,
   direction: "left" | "right",
+  app?: AppClassProperties,
 ) => {
   const indicesToMove = getIndicesToMove(elements, appState);
   const targetElementsMap = getTargetElementsMap(elements, indicesToMove);
@@ -296,7 +298,7 @@ const shiftElementsToEnd = (
   }
 
   const targetElements = Object.values(targetElementsMap).map((element) => {
-    return bumpVersion(element);
+    return bumpVersion(element, undefined, app);
   });
 
   const leadingElements = elements.slice(0, leadingIndex);
@@ -323,27 +325,31 @@ const shiftElementsToEnd = (
 export const moveOneLeft = (
   elements: readonly ExcalidrawElement[],
   appState: AppState,
+  app?: AppClassProperties,
 ) => {
-  return shiftElements(appState, elements, "left");
+  return shiftElements(appState, elements, "left", app);
 };
 
 export const moveOneRight = (
   elements: readonly ExcalidrawElement[],
   appState: AppState,
+  app?: AppClassProperties,
 ) => {
-  return shiftElements(appState, elements, "right");
+  return shiftElements(appState, elements, "right", app);
 };
 
 export const moveAllLeft = (
   elements: readonly ExcalidrawElement[],
   appState: AppState,
+  app?: AppClassProperties,
 ) => {
-  return shiftElementsToEnd(elements, appState, "left");
+  return shiftElementsToEnd(elements, appState, "left", app);
 };
 
 export const moveAllRight = (
   elements: readonly ExcalidrawElement[],
   appState: AppState,
+  app?: AppClassProperties,
 ) => {
-  return shiftElementsToEnd(elements, appState, "right");
+  return shiftElementsToEnd(elements, appState, "right", app);
 };

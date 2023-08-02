@@ -55,7 +55,7 @@ const enableActionGroup = (
 export const actionGroup = register({
   name: "group",
   trackEvent: { category: "element" },
-  perform: (elements, appState) => {
+  perform: (elements, appState, _, app) => {
     const selectedElements = getSelectedElements(
       getNonDeletedElements(elements),
       appState,
@@ -98,6 +98,10 @@ export const actionGroup = register({
           newGroupId,
           appState.editingGroupId,
         ),
+        customData: {
+          ...element.customData,
+          lastEditor: app?.props.userKey,
+        },
       });
     });
     // keep the z order within the group the same, but move them
@@ -117,6 +121,11 @@ export const actionGroup = register({
       ...elementsInGroup,
       ...elementsAfterGroup,
     ];
+
+    const handleGroup = app?.props.onGroup;
+    if (handleGroup) {
+      handleGroup();
+    }
 
     return {
       appState: selectGroup(
@@ -148,7 +157,7 @@ export const actionGroup = register({
 export const actionUngroup = register({
   name: "ungroup",
   trackEvent: { category: "element" },
-  perform: (elements, appState) => {
+  perform: (elements, appState, _, app) => {
     const groupIds = getSelectedGroupIds(appState);
     if (groupIds.length === 0) {
       return { appState, elements, commitToHistory: false };
@@ -168,6 +177,10 @@ export const actionUngroup = register({
       }
       return newElementWith(element, {
         groupIds: nextGroupIds,
+        customData: {
+          ...element.customData,
+          lastEditor: app?.props.userKey,
+        },
       });
     });
 

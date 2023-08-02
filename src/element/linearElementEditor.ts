@@ -599,6 +599,7 @@ export class LinearElementEditor {
     history: History,
     scenePointer: { x: number; y: number },
     linearElementEditor: LinearElementEditor,
+    userKey?: string,
   ): {
     didAddPoint: boolean;
     hitElement: NonDeleted<ExcalidrawElement> | null;
@@ -645,6 +646,10 @@ export class LinearElementEditor {
               appState.gridSize,
             ),
           ],
+          customData: {
+            ...element.customData,
+            lastEditor: userKey,
+          },
         });
         ret.didAddPoint = true;
       }

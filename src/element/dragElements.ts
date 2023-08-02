@@ -16,6 +16,7 @@ export const dragSelectedElements = (
   distanceX: number = 0,
   distanceY: number = 0,
   appState: AppState,
+  userKey?: string,
 ) => {
   const [x1, y1] = getCommonBounds(selectedElements);
   const offset = { x: pointerX - x1, y: pointerY - y1 };
@@ -27,6 +28,7 @@ export const dragSelectedElements = (
       pointerDownState,
       element,
       offset,
+      userKey,
     );
     // update coords of bound text only if we're dragging the container directly
     // (we don't drag the group that it's part of)
@@ -46,6 +48,7 @@ export const dragSelectedElements = (
           pointerDownState,
           textElement,
           offset,
+          userKey,
         );
       }
     }
@@ -62,6 +65,7 @@ const updateElementCoords = (
   pointerDownState: PointerDownState,
   element: NonDeletedExcalidrawElement,
   offset: { x: number; y: number },
+  userKey?: string,
 ) => {
   let x: number;
   let y: number;
@@ -75,10 +79,14 @@ const updateElementCoords = (
     x = element.x + offset.x;
     y = element.y + offset.y;
   }
-
+  const hasChangedCoords = x !== element.x || y !== element.y;
+  const customData = hasChangedCoords
+    ? { ...element.customData, lastEditor: userKey }
+    : element.customData;
   mutateElement(element, {
     x,
     y,
+    customData,
   });
 };
 export const getDragOffsetXY = (
