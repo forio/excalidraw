@@ -747,7 +747,7 @@ export const _renderScene = ({
           context.fillStyle = background;
           context.fillRect(offsetX, offsetY, boxWidth - 2, boxHeight - 2);
         }
-        context.fillStyle = oc.white;
+        context.fillStyle = stroke;
 
         context.fillText(
           usernameAndIdleState,
