@@ -583,7 +583,7 @@ class App extends React.Component<AppProps, AppState> {
       <div
         className={clsx("excalidraw excalidraw-container", {
           "excalidraw--view-mode": this.state.viewModeEnabled,
-          "excalidraw--mobile": this.device.isMobile,
+          "excalidraw--mobile": false,
         })}
         ref={this.excalidrawContainerRef}
         tabIndex={0}
@@ -954,9 +954,7 @@ class App extends React.Component<AppProps, AppState> {
     this.device = updateObject(this.device, {
       isLandscape: width > height,
       isSmScreen: width < MQ_SM_MAX_WIDTH,
-      isMobile:
-        width < MQ_MAX_WIDTH_PORTRAIT ||
-        (height < MQ_MAX_HEIGHT_LANDSCAPE && width < MQ_MAX_WIDTH_LANDSCAPE),
+      isMobile: false,
       canDeviceFitSidebar: width > sidebarBreakpoint,
     });
   };
@@ -1043,7 +1041,7 @@ class App extends React.Component<AppProps, AppState> {
         this.excalidrawContainerRef.current!.getBoundingClientRect();
         this.device = updateObject(this.device, {
           isSmScreen: smScreenQuery.matches,
-          isMobile: mdScreenQuery.matches,
+          isMobile: false,
           canDeviceFitSidebar: canDeviceFitSidebarMediaQuery.matches,
         });
       };
@@ -1435,7 +1433,7 @@ class App extends React.Component<AppProps, AppState> {
           theme: this.state.theme,
           imageCache: this.imageCache,
           isExporting: false,
-          renderScrollbars: !this.device.isMobile,
+          renderScrollbars: true,
         },
         callback: ({ atLeastOneVisibleElement, scrollBars }) => {
           if (scrollBars) {
@@ -1861,11 +1859,7 @@ class App extends React.Component<AppProps, AppState> {
 
   toggleLock = (source: "keyboard" | "ui" = "ui") => {
     if (!this.state.activeTool.locked) {
-      trackEvent(
-        "toolbar",
-        "toggleLock",
-        `${source} (${this.device.isMobile ? "mobile" : "desktop"})`,
-      );
+      trackEvent("toolbar", "toggleLock", `${source} ("desktop")`);
     }
     this.setState((prevState) => {
       return {
@@ -2966,7 +2960,7 @@ class App extends React.Component<AppProps, AppState> {
           element,
           this.state,
           [scenePointer.x, scenePointer.y],
-          this.device.isMobile,
+          false,
         )
       );
     });
@@ -2998,7 +2992,7 @@ class App extends React.Component<AppProps, AppState> {
       this.hitLinkElement,
       this.state,
       [lastPointerDownCoords.x, lastPointerDownCoords.y],
-      this.device.isMobile,
+      false,
     );
     const lastPointerUpCoords = viewportCoordsToSceneCoords(
       this.lastPointerUp!,
@@ -3008,7 +3002,7 @@ class App extends React.Component<AppProps, AppState> {
       this.hitLinkElement,
       this.state,
       [lastPointerUpCoords.x, lastPointerUpCoords.y],
-      this.device.isMobile,
+      false,
     );
     if (lastPointerDownHittingLinkIcon && lastPointerUpHittingLinkIcon) {
       const url = this.hitLinkElement.link;

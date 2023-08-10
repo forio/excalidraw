@@ -29,7 +29,7 @@ const MenuContent = ({
   });
 
   const classNames = clsx(`dropdown-menu ${className}`, {
-    "dropdown-menu--mobile": device.isMobile,
+    "dropdown-menu--mobile": false,
   }).trim();
 
   return (
@@ -42,9 +42,7 @@ const MenuContent = ({
       >
         {/* the zIndex ensures this menu has higher stacking order,
     see https://github.com/excalidraw/excalidraw/pull/1445 */}
-        {device.isMobile ? (
-          <Stack.Col className="dropdown-menu-container">{children}</Stack.Col>
-        ) : (
+        {
           <Island
             className="dropdown-menu-container"
             padding={2}
@@ -52,7 +50,7 @@ const MenuContent = ({
           >
             {children}
           </Island>
-        )}
+        }
       </div>
     </DropdownMenuContentPropsContext.Provider>
   );
