@@ -5,7 +5,7 @@ export const FILE_UPLOAD_TIMEOUT = 300;
 export const LOAD_IMAGES_TIMEOUT = 500;
 export const SYNC_FULL_SCENE_INTERVAL_MS = 20000;
 export const SYNC_BROWSER_TABS_TIMEOUT = 50;
-export const CURSOR_SYNC_TIMEOUT = 33; // ~30fps
+export const CURSOR_SYNC_TIMEOUT = 100; // ~10fps
 export const DELETED_ELEMENT_TIMEOUT = 24 * 60 * 60 * 1000; // 1 day
 
 export const FILE_UPLOAD_MAX_BYTES = 3 * 1024 * 1024; // 3 MiB
