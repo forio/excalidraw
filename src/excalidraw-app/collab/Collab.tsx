@@ -671,7 +671,7 @@ class Collab extends PureComponent<Props, CollabState> {
     this.portal.broadcastIdleChange(userState);
   };
 
-  broadcastElements = (elements: readonly ExcalidrawElement[]) => {
+  broadcastElements = throttle((elements: readonly ExcalidrawElement[]) => {
     if (
       getSceneVersion(elements) >
       this.getLastBroadcastedOrReceivedSceneVersion()
@@ -680,7 +680,7 @@ class Collab extends PureComponent<Props, CollabState> {
       this.lastBroadcastedOrReceivedSceneVersion = getSceneVersion(elements);
       this.queueBroadcastAllElements();
     }
-  };
+  }, CURSOR_SYNC_TIMEOUT);
 
   syncElements = (elements: readonly ExcalidrawElement[]) => {
     this.broadcastElements(elements);
