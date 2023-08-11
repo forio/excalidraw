@@ -88,7 +88,7 @@ export const MobileMenu = ({
                     />
                   </Stack.Row>
                 </Island>
-                {renderTopRightUI && renderTopRightUI(true, appState)}
+                {renderTopRightUI && renderTopRightUI(false, appState)}
                 <div className="mobile-misc-tools-container">
                   {!appState.viewModeEnabled && (
                     <DefaultSidebarTriggerTunnel.Out />
@@ -149,61 +149,61 @@ export const MobileMenu = ({
       </div>
     );
   };
-
-  return (
-    <>
-      {renderSidebars()}
-      {!appState.viewModeEnabled && renderToolbar()}
-      {!appState.openMenu && appState.showStats && (
-        <Stats
-          appState={appState}
-          setAppState={setAppState}
-          elements={elements}
-          onClose={() => {
-            actionManager.executeAction(actionToggleStats);
-          }}
-          renderCustomStats={renderCustomStats}
-        />
-      )}
-      <div
-        className="App-bottom-bar"
-        style={{
-          marginBottom: SCROLLBAR_WIDTH + SCROLLBAR_MARGIN * 2,
-          marginLeft: SCROLLBAR_WIDTH + SCROLLBAR_MARGIN * 2,
-          marginRight: SCROLLBAR_WIDTH + SCROLLBAR_MARGIN * 2,
-        }}
-      >
-        <Island padding={0}>
-          {appState.openMenu === "shape" &&
-          !appState.viewModeEnabled &&
-          showSelectedShapeActions(appState, elements) ? (
-            <Section className="App-mobile-menu" heading="selectedShapeActions">
-              <SelectedShapeActions
-                appState={appState}
-                elements={elements}
-                renderAction={actionManager.renderAction}
-              />
-            </Section>
-          ) : null}
-          <footer className="App-toolbar">
-            {renderAppToolbar()}
-            {appState.scrolledOutside &&
-              !appState.openMenu &&
-              !appState.openSidebar && (
-                <button
-                  className="scroll-back-to-content"
-                  onClick={() => {
-                    setAppState((appState) => ({
-                      ...calculateScrollCenter(elements, appState, canvas),
-                    }));
-                  }}
-                >
-                  {t("buttons.scrollBackToContent")}
-                </button>
-              )}
-          </footer>
-        </Island>
-      </div>
-    </>
-  );
+  return null;
+  // return (
+  //   <>
+  //     {renderSidebars()}
+  //     {!appState.viewModeEnabled && renderToolbar()}
+  //     {!appState.openMenu && appState.showStats && (
+  //       <Stats
+  //         appState={appState}
+  //         setAppState={setAppState}
+  //         elements={elements}
+  //         onClose={() => {
+  //           actionManager.executeAction(actionToggleStats);
+  //         }}
+  //         renderCustomStats={renderCustomStats}
+  //       />
+  //     )}
+  //     <div
+  //       className="App-bottom-bar"
+  //       style={{
+  //         marginBottom: SCROLLBAR_WIDTH + SCROLLBAR_MARGIN * 2,
+  //         marginLeft: SCROLLBAR_WIDTH + SCROLLBAR_MARGIN * 2,
+  //         marginRight: SCROLLBAR_WIDTH + SCROLLBAR_MARGIN * 2,
+  //       }}
+  //     >
+  //       <Island padding={0}>
+  //         {appState.openMenu === "shape" &&
+  //         !appState.viewModeEnabled &&
+  //         showSelectedShapeActions(appState, elements) ? (
+  //           <Section className="App-mobile-menu" heading="selectedShapeActions">
+  //             <SelectedShapeActions
+  //               appState={appState}
+  //               elements={elements}
+  //               renderAction={actionManager.renderAction}
+  //             />
+  //           </Section>
+  //         ) : null}
+  //         <footer className="App-toolbar">
+  //           {renderAppToolbar()}
+  //           {appState.scrolledOutside &&
+  //             !appState.openMenu &&
+  //             !appState.openSidebar && (
+  //               <button
+  //                 className="scroll-back-to-content"
+  //                 onClick={() => {
+  //                   setAppState((appState) => ({
+  //                     ...calculateScrollCenter(elements, appState, canvas),
+  //                   }));
+  //                 }}
+  //               >
+  //                 {t("buttons.scrollBackToContent")}
+  //               </button>
+  //             )}
+  //         </footer>
+  //       </Island>
+  //     </div>
+  //   </>
+  // );
 };

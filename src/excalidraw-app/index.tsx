@@ -648,10 +648,7 @@ const ExcalidrawWrapper = () => {
         onLibraryChange={onLibraryChange}
         autoFocus={true}
         theme={theme}
-        renderTopRightUI={(isMobile) => {
-          if (isMobile) {
-            return null;
-          }
+        renderTopRightUI={() => {
           return (
             <LiveCollaborationTrigger
               isCollaborating={isCollaborating}

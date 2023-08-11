@@ -223,7 +223,7 @@ const LayerUI = ({
                         <HintViewer
                           appState={appState}
                           elements={elements}
-                          isMobile={device.isMobile}
+                          isMobile={false}
                           device={device}
                         />
                         {heading}
@@ -244,7 +244,7 @@ const LayerUI = ({
             )}
           >
             <UserList collaborators={appState.collaborators} />
-            {renderTopRightUI?.(device.isMobile, appState)}
+            {renderTopRightUI?.(false, appState)}
             {!appState.viewModeEnabled &&
               // hide button when sidebar docked
               (!isSidebarDocked ||
@@ -265,7 +265,7 @@ const LayerUI = ({
           trackEvent(
             "sidebar",
             `toggleDock (${docked ? "dock" : "undock"})`,
-            `(${device.isMobile ? "mobile" : "desktop"})`,
+            `("desktop")`,
           );
         }}
       />
@@ -313,7 +313,7 @@ const LayerUI = ({
           }
         />
       )}
-      {device.isMobile && (
+      {/* {device.isMobile && (
         <MobileMenu
           appState={appState}
           elements={elements}
@@ -332,60 +332,60 @@ const LayerUI = ({
           device={device}
           renderWelcomeScreen={renderWelcomeScreen}
         />
-      )}
-      {!device.isMobile && (
-        <>
-          <div
-            className={clsx("layer-ui__wrapper", {
-              "disable-pointerEvents":
-                appState.draggingElement ||
-                appState.resizingElement ||
-                (appState.editingElement &&
-                  !isTextElement(appState.editingElement)),
-            })}
-            style={
-              appState.openSidebar &&
-              isSidebarDocked &&
-              device.canDeviceFitSidebar
-                ? { width: `calc(100% - ${LIBRARY_SIDEBAR_WIDTH}px)` }
-                : {}
-            }
-          >
-            {renderWelcomeScreen && <tunnels.WelcomeScreenCenterTunnel.Out />}
-            {renderFixedSideContainer()}
-            <Footer
+      )} */}
+      {/* {!device.isMobile && ( */}
+      <>
+        <div
+          className={clsx("layer-ui__wrapper", {
+            "disable-pointerEvents":
+              appState.draggingElement ||
+              appState.resizingElement ||
+              (appState.editingElement &&
+                !isTextElement(appState.editingElement)),
+          })}
+          style={
+            appState.openSidebar &&
+            isSidebarDocked &&
+            device.canDeviceFitSidebar
+              ? { width: `calc(100% - ${LIBRARY_SIDEBAR_WIDTH}px)` }
+              : {}
+          }
+        >
+          {renderWelcomeScreen && <tunnels.WelcomeScreenCenterTunnel.Out />}
+          {renderFixedSideContainer()}
+          <Footer
+            appState={appState}
+            actionManager={actionManager}
+            showExitZenModeBtn={showExitZenModeBtn}
+            renderWelcomeScreen={renderWelcomeScreen}
+          />
+          {appState.showStats && (
+            <Stats
               appState={appState}
-              actionManager={actionManager}
-              showExitZenModeBtn={showExitZenModeBtn}
-              renderWelcomeScreen={renderWelcomeScreen}
+              setAppState={setAppState}
+              elements={elements}
+              onClose={() => {
+                actionManager.executeAction(actionToggleStats);
+              }}
+              renderCustomStats={renderCustomStats}
             />
-            {appState.showStats && (
-              <Stats
-                appState={appState}
-                setAppState={setAppState}
-                elements={elements}
-                onClose={() => {
-                  actionManager.executeAction(actionToggleStats);
-                }}
-                renderCustomStats={renderCustomStats}
-              />
-            )}
-            {appState.scrolledOutside && (
-              <button
-                className="scroll-back-to-content"
-                onClick={() => {
-                  setAppState((appState) => ({
-                    ...calculateScrollCenter(elements, appState, canvas),
-                  }));
-                }}
-              >
-                {t("buttons.scrollBackToContent")}
-              </button>
-            )}
-          </div>
-          {renderSidebars()}
-        </>
-      )}
+          )}
+          {appState.scrolledOutside && (
+            <button
+              className="scroll-back-to-content"
+              onClick={() => {
+                setAppState((appState) => ({
+                  ...calculateScrollCenter(elements, appState, canvas),
+                }));
+              }}
+            >
+              {t("buttons.scrollBackToContent")}
+            </button>
+          )}
+        </div>
+        {renderSidebars()}
+      </>
+      {/* )} */}
     </>
   );
 

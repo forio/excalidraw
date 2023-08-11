@@ -7,14 +7,14 @@ const MobileFooter = ({
 }: {
   excalidrawAPI: ExcalidrawImperativeAPI;
 }) => {
-  const device = useDevice();
-  if (device.isMobile) {
-    return (
-      <Footer>
-        <CustomFooter excalidrawAPI={excalidrawAPI} />
-      </Footer>
-    );
-  }
+  // const device = useDevice();
+  // if (device.isMobile) {
+  //   return (
+  //     <Footer>
+  //       <CustomFooter excalidrawAPI={excalidrawAPI} />
+  //     </Footer>
+  //   );
+  // }
   return null;
 };
 export default MobileFooter;

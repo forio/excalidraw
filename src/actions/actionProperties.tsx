@@ -318,11 +318,7 @@ export const actionChangeFillStyle = register({
   name: "changeFillStyle",
   trackEvent: false,
   perform: (elements, appState, value, app) => {
-    trackEvent(
-      "element",
-      "changeFillStyle",
-      `${value} (${app.device.isMobile ? "mobile" : "desktop"})`,
-    );
+    trackEvent("element", "changeFillStyle", `${value} ("desktop"}`);
     return {
       elements: changeProperty(
         elements,
