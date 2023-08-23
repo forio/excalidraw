@@ -256,6 +256,7 @@ export { actionDuplicateSelection } from "../../actions/actionDuplicateSelection
 export { actionDeleteSelected } from "../../actions/actionDeleteSelected";
 export { DuplicateIcon, TrashIcon, handIcon } from "../../components/icons";
 export { default as Collab } from "../../excalidraw-app/collab/Collab";
+export { reconcileElements } from "../../excalidraw-app/collab/reconciliation";
 export { useCallbackRefState } from "../../hooks/useCallbackRefState";
 export { getDataURL } from "../../data/blob";
 export { getClientColors } from "../../clients";
