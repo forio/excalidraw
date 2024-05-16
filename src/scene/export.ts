@@ -143,18 +143,6 @@ export const exportToSvg = async (
   svgRoot.innerHTML = `
   ${SVG_EXPORT_TAG}
   ${metadata}
-  <defs>
-    <style class="style-fonts">
-      @font-face {
-        font-family: "Virgil";
-        src: url("${assetPath}Virgil.woff2");
-      }
-      @font-face {
-        font-family: "Cascadia";
-        src: url("${assetPath}Cascadia.woff2");
-      }
-    </style>
-  </defs>
   `;
   // render background rect
   if (appState.exportBackground && viewBackgroundColor) {
