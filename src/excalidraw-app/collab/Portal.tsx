@@ -28,16 +28,18 @@ class Portal {
     this.socket = socket;
     this.roomId = room;
 
-    this.socket.emit("join-room", this.roomId);
-    this.socket.on("new-user", async (_socketId: string) => {
+    this.socket.on("new-user", async () => {
       this.broadcastScene(
         WS_SCENE_EVENT_TYPES.INIT,
         this.collab.getSceneElementsIncludingDeleted(),
         /* syncAll */ true,
       );
     });
-    this.socket.on("room-user-change", (clients: string[]) => {
-      this.collab.setCollaborators(clients);
+
+    this.socket.on("leave-room", async (userKey: string) => {
+      const next = new Map(this.collab.getCollaborators());
+      next.delete(userKey);
+      this.collab.setCollaborators([...next.keys()]);
     });
 
     return socket;

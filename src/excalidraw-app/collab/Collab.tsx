@@ -58,6 +58,7 @@ export interface CollabAPI {
   syncElements: CollabInstance["syncElements"];
   fetchImageFilesFromFirebase: CollabInstance["fetchImageFilesFromFirebase"];
   setUsername: (username: string) => void;
+  setCollaborators: (collaborators: string[]) => void;
 }
 
 interface PublicProps {
@@ -122,6 +123,7 @@ class Collab extends PureComponent<Props, CollabState> {
       syncElements: this.syncElements,
       //   fetchImageFilesFromFirebase: this.fetchUnloadedImages,
       stopCollaboration: this.stopCollaboration,
+      setCollaborators: this.setCollaborators,
     };
 
     this.props.setCollabAPI(collabAPI);
@@ -434,6 +436,7 @@ class Collab extends PureComponent<Props, CollabState> {
           user.selectedElementIds = selectedElementIds;
           user.username = username;
           collaborators.set(socketId, user);
+          this.collaborators = collaborators;
           this.excalidrawAPI.updateScene({
             collaborators,
           });
@@ -445,6 +448,8 @@ class Collab extends PureComponent<Props, CollabState> {
           const user = collaborators.get(socketId) || {}!;
           user.userState = userState;
           user.username = username;
+          collaborators.set(socketId, user);
+          this.collaborators = collaborators;
           this.excalidrawAPI.updateScene({
             collaborators,
           });
@@ -628,7 +633,9 @@ class Collab extends PureComponent<Props, CollabState> {
     window.addEventListener(EVENT.VISIBILITY_CHANGE, this.onVisibilityChange);
   };
 
-  setCollaborators(sockets: string[]) {
+  getCollaborators = () => this.collaborators;
+
+  setCollaborators = (sockets: string[]) => {
     const collaborators: InstanceType<typeof Collab>["collaborators"] =
       new Map();
     for (const socketId of sockets) {
@@ -640,7 +647,7 @@ class Collab extends PureComponent<Props, CollabState> {
     }
     this.collaborators = collaborators;
     this.excalidrawAPI.updateScene({ collaborators });
-  }
+  };
 
   public setLastBroadcastedOrReceivedSceneVersion = (version: number) => {
     this.lastBroadcastedOrReceivedSceneVersion = version;
